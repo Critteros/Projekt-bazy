@@ -7,7 +7,14 @@
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "migrate-tool": "ts-node node_modules/.bin/node-pg-migrate",
+    "make-migration": "run-s \"migrate-tool create -j sql {1}\" --",
+    "make-migration:ts": "run-s \"migrate-tool create -j ts {1}\" --",
+    "migrate": "run-s migrate:up",
+    "migrate:up": "run-s \"migrate-tool up {1}\" -- ",
+    "migrate:down": "run-s \"migrate-tool down {1}\" --",
+    "migrate:redo": "run-s \"migrate-tool redo {1}\" --"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
@@ -23,6 +30,7 @@
     "@trpc/next": "^10.8.1",
     "@trpc/react-query": "^10.8.1",
     "@trpc/server": "^10.8.1",
+    "dotenv": "^16.0.3",
     "next": "13.1.1",
     "node-pg-migrate": "^6.2.2",
     "pg": "^8.8.0",
@@ -44,10 +52,12 @@
     "eslint-config-next": "13.1.1",
     "husky": "^8.0.3",
     "lint-staged": "^13.1.0",
+    "npm-run-all": "^4.1.5",
     "postcss": "^8.4.14",
     "prettier": "^2.8.1",
     "prettier-plugin-tailwindcss": "^0.2.1",
     "tailwindcss": "^3.2.0",
+    "ts-node": "^10.9.1",
     "typescript": "^4.9.4"
   },
   "ct3aMetadata": {
