@@ -17,10 +17,10 @@
     "noUncheckedIndexedAccess": true,
     "paths": {
       "$env/*": ["src/env/*"],
-      "$css/*": ["src/styles/*"],
       "@/server/*": ["src/server/*"],
       "@/components/*": ["src/components/*"],
-      "@/utils/*": ["src/utils/*"]
+      "@/utils/*": ["src/utils/*"],
+      "@/style/*": ["src/style/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"],

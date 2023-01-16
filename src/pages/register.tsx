@@ -1,18 +1,18 @@
 import { type NextPage } from 'next';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 import { Home } from '@mui/icons-material';
 
 import { AuthFormBase } from '@/components/atoms/AuthFormBase';
-import { LoginForm } from '@/components/molecules/LoginForm';
+import { RegisterForm } from '@/components/molecules/RegisterForm';
 import { CornerButton } from '@/components/atoms/CornerButton';
 
-const Login: NextPage = () => {
+const Register: NextPage = () => {
   const router = useRouter();
   return (
     <>
       <Head>
-        <title>Login</title>
+        <title>Register</title>
       </Head>
       <CornerButton
         onClick={() => {
@@ -21,15 +21,11 @@ const Login: NextPage = () => {
       >
         <Home fontSize={'large'} />
       </CornerButton>
-      <AuthFormBase title={'login'}>
-        <LoginForm
-          onSubmit={(values) => {
-            alert(JSON.stringify(values, null, 2));
-          }}
-        />
+      <AuthFormBase title={'register'}>
+        <RegisterForm onSubmit={(data) => alert(JSON.stringify(data, null, 2))}></RegisterForm>
       </AuthFormBase>
     </>
   );
 };
 
-export default Login;
+export default Register;

@@ -1,17 +1,12 @@
 import { type AppType } from 'next/app';
-import { ThemeProvider, CssBaseline, createTheme } from '@mui/material';
+import { ThemeProvider, CssBaseline } from '@mui/material';
 
 import { api } from '@/utils/api';
-
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-});
+import { theme } from '@/style/theme';
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <Component {...pageProps} />
     </ThemeProvider>
