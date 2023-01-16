@@ -16,7 +16,7 @@
  * processing a request
  *
  */
-import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
+import { type CreateNextContextOptions } from '@trpc/server/adapters/next';
 
 /**
  * Replace this with an object if you want to pass things to createContextInner
@@ -51,8 +51,8 @@ export const createTRPCContext = (_opts: CreateNextContextOptions) => {
  * This is where the trpc api is initialized, connecting the context and
  * transformer
  */
-import { initTRPC } from "@trpc/server";
-import superjson from "superjson";
+import { initTRPC } from '@trpc/server';
+import superjson from 'superjson';
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
@@ -82,3 +82,5 @@ export const createTRPCRouter = t.router;
  * can still access user session data if they are logged in
  */
 export const publicProcedure = t.procedure;
+
+export const roleProtectedProcedure = (role: string) => t.procedure;

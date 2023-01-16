@@ -28,6 +28,7 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@faker-js/faker": "^7.6.0",
+    "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.4",
     "@mui/x-data-grid": "^5.17.18",
     "@mui/x-date-pickers": "^5.0.13",
@@ -40,6 +41,7 @@
     "bcrypt": "^5.1.0",
     "dayjs": "^1.11.7",
     "dotenv": "^16.0.3",
+    "formik": "^2.2.9",
     "lodash": "^4.17.21",
     "next": "13.1.1",
     "node-pg-migrate": "^6.2.2",
@@ -48,6 +50,7 @@
     "react-dom": "18.2.0",
     "sql-template-strings": "^2.2.2",
     "superjson": "1.9.1",
+    "yup": "^0.32.11",
     "zod": "^3.20.2"
   },
   "devDependencies": {
