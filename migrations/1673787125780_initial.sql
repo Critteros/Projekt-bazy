@@ -3,8 +3,8 @@ BEGIN;
 CREATE TABLE "room_type"
 (
     "room_type_id"  SERIAL PRIMARY KEY,
-    "friendly_name" VARCHAR(255) NOT NULL,
-    "description"   TEXT         NOT NULL
+    "friendly_name" VARCHAR(255) UNIQUE NOT NULL,
+    "description"   TEXT                NOT NULL
 );
 
 CREATE TABLE "rooms"
@@ -17,9 +17,9 @@ CREATE TABLE "rooms"
 
 CREATE TABLE "room_to_type_relation"
 (
+    "id"           SERIAL PRIMARY KEY,
     "room_number"  INTEGER NOT NULL,
-    "room_type_id" INTEGER NOT NULL,
-    PRIMARY KEY ("room_number", "room_type_id")
+    "room_type_id" INTEGER NOT NULL
 );
 
 CREATE TYPE gender AS ENUM ('male', 'female');
@@ -40,24 +40,24 @@ CREATE INDEX "customer_firstname_index" ON "customer" USING hash ("firstname");
 CREATE TABLE "account"
 (
     "account_id" SERIAL PRIMARY KEY,
-    "email"      VARCHAR(255) UNIQUE NOT NULL,
+    "login"      VARCHAR(255) UNIQUE NOT NULL,
     "password"   VARCHAR(255)        NOT NULL
 );
 CREATE INDEX "account_email_index" ON
-    "account" USING hash ("email");
+    "account" USING hash ("login");
 
 CREATE TABLE "account_roles"
 (
     "role_id"     SERIAL PRIMARY KEY,
-    "name"        VARCHAR(255) NOT NULL,
-    "description" TEXT         NOT NULL
+    "name"        VARCHAR(255) UNIQUE NOT NULL,
+    "description" TEXT                NOT NULL
 );
 
 CREATE TABLE "account_role_relation"
 (
+    "id"         SERIAL PRIMARY KEY,
     "account_id" INTEGER NOT NULL,
-    "role_id"    BIGINT  NOT NULL,
-    PRIMARY KEY ("account_id", "role_id")
+    "role_id"    BIGINT  NOT NULL
 );
 
 CREATE TABLE "staff"
@@ -88,10 +88,8 @@ CREATE INDEX "transaction_date_index" ON
 CREATE TABLE "payments"
 (
     "payment_id"   SERIAL PRIMARY KEY,
-    "customer_id"  INTEGER      NOT NULL,
     "method"       VARCHAR(255) NOT NULL,
-    "total_amount" INTEGER      NOT NULL,
-    "date"         DATE         NOT NULL
+    "total_amount" INTEGER      NOT NULL
 );
 
 CREATE TABLE "reservation"
@@ -105,9 +103,9 @@ CREATE TABLE "reservation"
 
 CREATE TABLE "reservation_room_type_relation"
 (
+    "id"             SERIAL PRIMARY KEY,
     "reservation_id" INTEGER NOT NULL,
-    "room_type_id"   INTEGER NOT NULL,
-    PRIMARY KEY ("reservation_id", "room_type_id")
+    "room_type_id"   INTEGER NOT NULL
 );
 
 -- Relations
