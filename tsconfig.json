@@ -15,12 +15,15 @@
     "jsx": "preserve",
     "incremental": true,
     "noUncheckedIndexedAccess": true,
+    "baseUrl": ".",
     "paths": {
       "$env/*": ["src/env/*"],
-      "$css/*": ["src/styles/*"],
       "@/server/*": ["src/server/*"],
       "@/components/*": ["src/components/*"],
-      "@/utils/*": ["src/utils/*"]
+      "@/utils/*": ["src/utils/*"],
+      "@/style/*": ["src/style/*"],
+      "@/dto/*": ["src/dto/*"],
+      "@/hooks/*": ["src/hooks/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"],

@@ -6,6 +6,10 @@
  * tl;dr - this is where all the tRPC server stuff is created and plugged in.
  * The pieces you will need to use are documented accordingly near the end
  */
+import { intersection } from 'lodash';
+
+import { client as dbClient } from '@/server/db/client';
+import type { AccountRoles } from '@/server/db/tableSchema';
 
 /**
  * 1. CONTEXT
@@ -16,12 +20,7 @@
  * processing a request
  *
  */
-import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
-
-/**
- * Replace this with an object if you want to pass things to createContextInner
- */
-type CreateContextOptions = Record<string, never>;
+import { type CreateNextContextOptions } from '@trpc/server/adapters/next';
 
 /**
  * This helper generates the "internals" for a tRPC context. If you need to use
@@ -32,8 +31,10 @@ type CreateContextOptions = Record<string, never>;
  * - trpc's `createSSGHelpers` where we don't have req/res
  * @see https://create.t3.gg/en/usage/trpc#-servertrpccontextts
  */
-const createInnerTRPCContext = (_opts: CreateContextOptions) => {
-  return {};
+const createInnerTRPCContext = () => {
+  return {
+    db: dbClient,
+  };
 };
 
 /**
@@ -41,8 +42,15 @@ const createInnerTRPCContext = (_opts: CreateContextOptions) => {
  * process every request that goes through your tRPC endpoint
  * @see https://trpc.io/docs/context
  */
-export const createTRPCContext = (_opts: CreateNextContextOptions) => {
-  return createInnerTRPCContext({});
+export const createTRPCContext = async ({ req, res }: CreateNextContextOptions) => {
+  const innerContext = createInnerTRPCContext();
+  const session = await getUserSession({ req, res, db: innerContext.db });
+  return {
+    ...innerContext,
+    req,
+    res,
+    session,
+  };
 };
 
 /**
@@ -51,8 +59,11 @@ export const createTRPCContext = (_opts: CreateNextContextOptions) => {
  * This is where the trpc api is initialized, connecting the context and
  * transformer
  */
-import { initTRPC } from "@trpc/server";
-import superjson from "superjson";
+import { initTRPC, TRPCError } from '@trpc/server';
+import superjson from 'superjson';
+import { getUserSession } from '@/server/services/session.service';
+import { AuthRoles } from '@/server/db/enums';
+import { hasRole } from '@/utils/roles';
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
@@ -74,6 +85,38 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
  */
 export const createTRPCRouter = t.router;
 
+/*
+ * Middlewares
+ */
+const requireAuth = t.middleware(({ ctx, next }) => {
+  if (!ctx.session) {
+    throw new TRPCError({
+      code: 'UNAUTHORIZED',
+      message: 'You must be logged in to access this resource',
+    });
+  }
+  return next();
+});
+
+const requireAuthRole = (roles: AccountRoles['name'][]) =>
+  t.middleware(({ ctx, next }) => {
+    if (!ctx.session) {
+      throw new TRPCError({
+        code: 'UNAUTHORIZED',
+        message: 'You must be logged in to access this resource',
+      });
+    }
+
+    if (!hasRole(ctx.session.roles, roles)) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'You do not have required permissions to view this resource',
+      });
+    }
+
+    return next();
+  });
+
 /**
  * Public (unauthed) procedure
  *
@@ -82,3 +125,8 @@ export const createTRPCRouter = t.router;
  * can still access user session data if they are logged in
  */
 export const publicProcedure = t.procedure;
+
+export const protectedProcedure = t.procedure.use(requireAuth);
+
+export const roleProtectedProcedure = (roles: AccountRoles['name'][]) =>
+  t.procedure.use(requireAuthRole(roles));
