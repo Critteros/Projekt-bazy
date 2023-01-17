@@ -30,7 +30,7 @@ export const createJWT = (content: JWTContent) => {
   };
 };
 
-type NextAPIBase = {
+export type NextAPIBase = {
   req: NextApiRequest;
   res: NextApiResponse;
 };

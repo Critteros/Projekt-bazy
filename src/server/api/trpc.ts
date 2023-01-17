@@ -6,7 +6,10 @@
  * tl;dr - this is where all the tRPC server stuff is created and plugged in.
  * The pieces you will need to use are documented accordingly near the end
  */
+import { intersection } from 'lodash';
+
 import { client as dbClient } from '@/server/db/client';
+import type { AccountRoles } from '@/server/db/tableSchema';
 
 /**
  * 1. CONTEXT
@@ -39,12 +42,14 @@ const createInnerTRPCContext = () => {
  * process every request that goes through your tRPC endpoint
  * @see https://trpc.io/docs/context
  */
-export const createTRPCContext = ({ req, res }: CreateNextContextOptions) => {
+export const createTRPCContext = async ({ req, res }: CreateNextContextOptions) => {
   const innerContext = createInnerTRPCContext();
+  const session = await getUserSession({ req, res, db: innerContext.db });
   return {
     ...innerContext,
     req,
     res,
+    session,
   };
 };
 
@@ -54,8 +59,10 @@ export const createTRPCContext = ({ req, res }: CreateNextContextOptions) => {
  * This is where the trpc api is initialized, connecting the context and
  * transformer
  */
-import { initTRPC } from '@trpc/server';
+import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
+import { getUserSession } from '@/server/services/session.service';
+import { AuthRoles } from '@/server/db/enums';
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
@@ -77,6 +84,39 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
  */
 export const createTRPCRouter = t.router;
 
+/*
+ * Middlewares
+ */
+const requireAuth = t.middleware(({ ctx, next }) => {
+  if (!ctx.session) {
+    throw new TRPCError({
+      code: 'UNAUTHORIZED',
+      message: 'You must be logged in to access this resource',
+    });
+  }
+  return next();
+});
+
+const requireAuthRole = (roles: AccountRoles['name'][]) =>
+  t.middleware(({ ctx, next }) => {
+    if (!ctx.session) {
+      throw new TRPCError({
+        code: 'UNAUTHORIZED',
+        message: 'You must be logged in to access this resource',
+      });
+    }
+
+    const matchedRoles = intersection(ctx.session.roles, roles);
+    if (matchedRoles.length === 0) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'You do not have required permissions to view this resource',
+      });
+    }
+
+    return next();
+  });
+
 /**
  * Public (unauthed) procedure
  *
@@ -86,4 +126,7 @@ export const createTRPCRouter = t.router;
  */
 export const publicProcedure = t.procedure;
 
-export const roleProtectedProcedure = (role: string) => t.procedure;
+export const protectedProcedure = t.procedure.use(requireAuth);
+
+export const roleProtectedProcedure = (roles: AccountRoles['name'][]) =>
+  t.procedure.use(requireAuthRole(roles));

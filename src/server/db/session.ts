@@ -5,11 +5,7 @@ import { CustomerSchema, StaffSchema, AccountSchema, AccountRolesSchema } from '
 export const AccountInfoSchema = AccountSchema.pick({
   login: true,
 }).extend({
-  roles: z.array(
-    AccountRolesSchema.pick({
-      name: true,
-    }),
-  ),
+  roles: z.array(AccountRolesSchema.shape.name),
   customer_profile: CustomerSchema.nullable(),
   staff_profile: StaffSchema.nullable(),
 });
