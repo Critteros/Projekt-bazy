@@ -1,10 +1,10 @@
 import { z } from 'zod';
 
-import { GenderSchema } from '@/server/db/enums';
+import { GenderSchema, AuthRolesSchema } from '@/server/db/enums';
 
 export const AccountRolesSchema = z.object({
   role_id: z.number(),
-  name: z.string(),
+  name: z.union([z.string(), AuthRolesSchema]),
   description: z.string(),
 });
 export type AccountRoles = z.infer<typeof AccountRolesSchema>;
