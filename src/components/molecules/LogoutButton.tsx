@@ -5,14 +5,18 @@ import { api } from '@/utils/api';
 import { ErrorNotification } from '@/components/atoms/ErrorNotification';
 
 type LogoutButtonProps = {
-  onLogout: () => void;
+  onLogout?: () => void;
   typographyProps?: TypographyProps;
 } & Omit<ButtonProps, 'onClick'>;
 
 export const LogoutButton = ({ onLogout, typographyProps, ...props }: LogoutButtonProps) => {
   const [error, setError] = useState<string | null>(null);
+  const trpcContext = api.useContext();
   const logoutMutation = api.auth.logout.useMutation({
-    onSuccess: onLogout,
+    onSuccess: async () => {
+      await trpcContext.session.info.invalidate();
+      onLogout?.();
+    },
     onError: (error) => {
       setError(error.message);
     },

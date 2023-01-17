@@ -15,9 +15,11 @@ const Register: NextPage = () => {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
+  const trpcContext = api.useContext();
   const registerMutation = api.auth.register.useMutation({
     onSuccess: async () => {
       await router.push('/');
+      await trpcContext.session.info.invalidate();
     },
     onError: (error) => {
       formRef.current?.resetForm();
