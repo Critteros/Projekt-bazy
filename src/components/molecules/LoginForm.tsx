@@ -18,60 +18,61 @@ export type LoginFormRef = {
   resetForm: () => void;
 };
 
-export const LoginForm = forwardRef<LoginFormRef | undefined, LoginFormProps>(
-  ({ onSubmit }, ref) => {
-    const formik = useFormik<SchemaType>({
-      initialValues: {
-        login: '',
-        password: '',
-      },
-      validationSchema,
-      onSubmit,
-    });
+export const LoginForm = forwardRef<LoginFormRef | undefined, LoginFormProps>(function LoginForm(
+  { onSubmit },
+  ref,
+) {
+  const formik = useFormik<SchemaType>({
+    initialValues: {
+      login: '',
+      password: '',
+    },
+    validationSchema,
+    onSubmit,
+  });
 
-    useImperativeHandle(
-      ref,
-      () => {
-        return {
-          resetForm: formik.resetForm,
-        };
-      },
-      [formik],
-    );
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        resetForm: formik.resetForm,
+      };
+    },
+    [formik],
+  );
 
-    return (
-      <Box component={'form'} sx={{ mt: 1 }} noValidate onSubmit={formik.handleSubmit}>
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          autoFocus
-          id="login"
-          label="Login"
-          name="login"
-          value={formik.values.login}
-          onChange={formik.handleChange}
-          error={formik.touched.login && !!formik.errors.login}
-          helperText={formik.touched.login && formik.errors.login}
-        />
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          id="password"
-          label="Password"
-          name="password"
-          type="password"
-          autoComplete="current-password"
-          value={formik.values.password}
-          onChange={formik.handleChange}
-          error={formik.touched.password && !!formik.errors.password}
-          helperText={formik.touched.password && formik.errors.password}
-        />
-        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-          <Typography>Login</Typography>
-        </Button>
-      </Box>
-    );
-  },
-);
+  return (
+    <Box component={'form'} sx={{ mt: 1 }} noValidate onSubmit={formik.handleSubmit}>
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        autoFocus
+        id="login"
+        label="Login"
+        name="login"
+        value={formik.values.login}
+        onChange={formik.handleChange}
+        error={formik.touched.login && !!formik.errors.login}
+        helperText={formik.touched.login && formik.errors.login}
+      />
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        id="password"
+        label="Password"
+        name="password"
+        type="password"
+        autoComplete="current-password"
+        value={formik.values.password}
+        onChange={formik.handleChange}
+        error={formik.touched.password && !!formik.errors.password}
+        helperText={formik.touched.password && formik.errors.password}
+      />
+      <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+        <Typography>Login</Typography>
+      </Button>
+    </Box>
+  );
+});

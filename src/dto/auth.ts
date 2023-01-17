@@ -1,8 +1,10 @@
 import { z } from 'zod';
 
+import { AccountSchema } from '@/server/db/tableSchema';
+
 export const LoginRequestSchema = z.object({
-  login: z.string(),
-  password: z.string(),
+  login: AccountSchema.shape.login,
+  password: AccountSchema.shape.password,
 });
 
 export type LoginRequest = z.infer<typeof LoginRequestSchema>;
@@ -14,13 +16,11 @@ export const LoginResponseSchema = z.object({
 export type LoginResponse = z.infer<typeof LoginResponseSchema>;
 
 export const RegisterRequestSchema = z.object({
-  login: z
-    .string()
+  login: AccountSchema.shape.login
     .min(3)
     .max(50)
     .regex(/^[ A-Za-z0-9_]*$/),
-  password: z
-    .string()
+  password: AccountSchema.shape.password
     .min(8)
     .max(50)
     .regex(/[a-zA-Z]/),

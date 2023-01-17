@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 // @ts-check
 const tsNode = require('ts-node');
 const tsPaths = require('tsconfig-paths');
@@ -11,5 +12,6 @@ tsPaths.register({
   baseUrl: '.',
 });
 
+// eslint-disable-next-line
 // @ts-ignore
 require('node-pg-migrate/bin/node-pg-migrate');

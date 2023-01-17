@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle } from 'react';
-import { Box, Grid, Button, TextField, Link, Typography } from '@mui/material';
+import { Box, Button, TextField, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
@@ -35,7 +35,7 @@ export type RegisterFormRef = {
 };
 
 export const RegisterForm = forwardRef<RegisterFormRef | undefined, RegisterFormProps>(
-  ({ onSubmit }, ref) => {
+  function RegisterForm({ onSubmit }, ref) {
     const formik = useFormik<SchemaType>({
       initialValues: {
         login: '',

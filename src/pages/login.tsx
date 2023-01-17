@@ -5,7 +5,7 @@ import { useRef, useState } from 'react';
 import { Home } from '@mui/icons-material';
 
 import { AuthFormBase } from '@/components/atoms/AuthFormBase';
-import { LoginForm, LoginFormRef } from '@/components/molecules/LoginForm';
+import { LoginForm, type LoginFormRef } from '@/components/molecules/LoginForm';
 import { CornerButton } from '@/components/atoms/CornerButton';
 import { api } from '@/utils/api';
 import { ErrorNotification } from '@/components/atoms/ErrorNotification';

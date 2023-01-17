@@ -1,7 +1,7 @@
 import type { Pool } from 'pg';
 import bcrypt from 'bcrypt';
 
-import type { Account as AccountTable } from '@/server/db/tableTypes';
+import type { Account as AccountTable } from '@/server/db/tableSchema';
 
 export class Account {
   constructor(private dbPool: Pool) {}
@@ -18,7 +18,8 @@ export class Account {
 
   public async createNewUser({ login, password }: { login: string; password: string }) {
     const hash = await bcrypt.hash(password, 10);
-    const query = await this.dbPool.query<Pick<AccountTable, 'account_id' | 'login'>>({
+    type RowType = Pick<AccountTable, 'account_id' | 'login'>;
+    const query = await this.dbPool.query<RowType>({
       name: 'create-new-user',
       text: 'INSERT INTO account (login, password) VALUES ($1, $2) RETURNING account_id, login',
       values: [login, hash],

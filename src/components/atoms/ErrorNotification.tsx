@@ -1,4 +1,4 @@
-import { SyntheticEvent, useState, useEffect } from 'react';
+import { type SyntheticEvent, useState, useEffect } from 'react';
 import { Alert, Snackbar, type SnackbarCloseReason } from '@mui/material';
 import ms from 'ms';
 
