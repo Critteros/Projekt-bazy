@@ -1,4 +1,4 @@
-import { setCookie } from 'cookies-next';
+import { setCookie, deleteCookie } from 'cookies-next';
 import { TRPCError } from '@trpc/server';
 import bcrypt from 'bcrypt';
 
@@ -10,6 +10,7 @@ import {
   type LoginResponse,
   RegisterRequestSchema,
   type RegisterResponse,
+  type LogoutResponse,
 } from '@/dto/auth';
 
 export const loginController = publicProcedure
@@ -94,3 +95,15 @@ export const registerController = publicProcedure
       message: 'success',
     };
   });
+
+export const logoutController = publicProcedure.mutation<LogoutResponse>(({ ctx }) => {
+  // Just delete the cookie
+  deleteCookie('jwt', {
+    req: ctx.req,
+    res: ctx.res,
+  });
+
+  return {
+    message: 'success',
+  };
+});

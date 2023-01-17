@@ -30,3 +30,4 @@ export type RegisterRequest = z.infer<typeof RegisterRequestSchema>;
 
 export const RegisterResponseSchema = LoginResponseSchema;
 export type RegisterResponse = z.infer<typeof RegisterResponseSchema>;
+export type LogoutResponse = { message: 'success' };
