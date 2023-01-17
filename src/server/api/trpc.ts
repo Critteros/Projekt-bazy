@@ -6,6 +6,7 @@
  * tl;dr - this is where all the tRPC server stuff is created and plugged in.
  * The pieces you will need to use are documented accordingly near the end
  */
+import { client as dbClient } from '@/server/db/client';
 
 /**
  * 1. CONTEXT
@@ -19,11 +20,6 @@
 import { type CreateNextContextOptions } from '@trpc/server/adapters/next';
 
 /**
- * Replace this with an object if you want to pass things to createContextInner
- */
-type CreateContextOptions = Record<string, never>;
-
-/**
  * This helper generates the "internals" for a tRPC context. If you need to use
  * it, you can export it from here
  *
@@ -32,8 +28,10 @@ type CreateContextOptions = Record<string, never>;
  * - trpc's `createSSGHelpers` where we don't have req/res
  * @see https://create.t3.gg/en/usage/trpc#-servertrpccontextts
  */
-const createInnerTRPCContext = (_opts: CreateContextOptions) => {
-  return {};
+const createInnerTRPCContext = () => {
+  return {
+    db: dbClient,
+  };
 };
 
 /**
@@ -41,8 +39,13 @@ const createInnerTRPCContext = (_opts: CreateContextOptions) => {
  * process every request that goes through your tRPC endpoint
  * @see https://trpc.io/docs/context
  */
-export const createTRPCContext = (_opts: CreateNextContextOptions) => {
-  return createInnerTRPCContext({});
+export const createTRPCContext = ({ req, res }: CreateNextContextOptions) => {
+  const innerContext = createInnerTRPCContext();
+  return {
+    ...innerContext,
+    req,
+    res,
+  };
 };
 
 /**
