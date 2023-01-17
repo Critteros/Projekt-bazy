@@ -1,10 +1,9 @@
-import { setCookie, deleteCookie } from 'cookies-next';
 import { TRPCError } from '@trpc/server';
 import bcrypt from 'bcrypt';
 
 import { publicProcedure } from '@/server/api/trpc';
 import { Account } from '@/server/models/Account';
-import { createJWT } from '@/server/services/auth';
+import { setJWTCookie, removeJWTCookie } from '@/server/services/auth.service';
 import {
   LoginRequestSchema,
   type LoginResponse,
@@ -30,20 +29,15 @@ export const loginController = publicProcedure
     // 2) Check passwords securely
     if (await bcrypt.compare(password, user.password)) {
       // User is authorised, save session
-      const {
-        token,
-        settings: { tokenLifetime },
-      } = createJWT({
-        accountId: user.account_id,
-      });
-      const { req, res } = ctx;
-      setCookie('jwt', token, {
-        maxAge: tokenLifetime / 1000,
-        httpOnly: true,
-        secure: false,
-        req,
-        res,
-      });
+      setJWTCookie(
+        {
+          accountId: user.account_id,
+        },
+        {
+          req: ctx.req,
+          res: ctx.res,
+        },
+      );
 
       return {
         message: 'success',
@@ -79,14 +73,25 @@ export const registerController = publicProcedure
     }
 
     // 3) Create and set token
-    const { token, settings: tokenSettings } = createJWT({
-      accountId: newUser.account_id,
-    });
-    const { req, res } = ctx;
-    setCookie('jwt', token, {
-      maxAge: tokenSettings.tokenLifetime,
-      httpOnly: true,
-      secure: false,
+    setJWTCookie(
+      {
+        accountId: newUser.account_id,
+      },
+      {
+        req: ctx.req,
+        res: ctx.res,
+      },
+    );
+
+    return {
+      message: 'success',
+    };
+  });
+
+export const logoutController = publicProcedure.mutation<LogoutResponse>(
+  ({ ctx: { req, res } }) => {
+    // Just delete the cookie
+    removeJWTCookie({
       req,
       res,
     });
@@ -94,16 +99,5 @@ export const registerController = publicProcedure
     return {
       message: 'success',
     };
-  });
-
-export const logoutController = publicProcedure.mutation<LogoutResponse>(({ ctx }) => {
-  // Just delete the cookie
-  deleteCookie('jwt', {
-    req: ctx.req,
-    res: ctx.res,
-  });
-
-  return {
-    message: 'success',
-  };
-});
+  },
+);

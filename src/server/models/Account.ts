@@ -16,6 +16,17 @@ export class Account {
     return query.rows[0]!;
   }
 
+  public async getSafeUser(login: string) {
+    type RowType = Pick<AccountTable, 'account_id' | 'login'>;
+    const query = await this.dbPool.query<RowType>({
+      name: 'fetch-user-safe',
+      text: 'SELECT account_id,login FROM account WHERE login=$1 LIMIT 1',
+      values: [login],
+    });
+    if (query.rowCount === 0) return null;
+    return query.rows[0];
+  }
+
   public async createNewUser({ login, password }: { login: string; password: string }) {
     const hash = await bcrypt.hash(password, 10);
     type RowType = Pick<AccountTable, 'account_id' | 'login'>;
