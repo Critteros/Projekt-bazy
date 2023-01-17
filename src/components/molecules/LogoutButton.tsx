@@ -1,8 +1,11 @@
-import { Button, Typography, type ButtonProps, type TypographyProps } from '@mui/material';
+import { Typography, type ButtonProps, type TypographyProps } from '@mui/material';
+import { Logout as LogoutIcon } from '@mui/icons-material';
 import { useState } from 'react';
 
 import { api } from '@/utils/api';
 import { ErrorNotification } from '@/components/atoms/ErrorNotification';
+import { IconWrapper } from '@/components/atoms/IconWrapper';
+import { AppButton } from '@/components/atoms/AppButton';
 
 type LogoutButtonProps = {
   onLogout?: () => void;
@@ -24,9 +27,12 @@ export const LogoutButton = ({ onLogout, typographyProps, ...props }: LogoutButt
 
   return (
     <>
-      <Button onClick={() => logoutMutation.mutate()} {...props}>
+      <AppButton onClick={() => logoutMutation.mutate()} {...props}>
+        <IconWrapper>
+          <LogoutIcon />
+        </IconWrapper>
         <Typography {...typographyProps}>Logout</Typography>
-      </Button>
+      </AppButton>
       <ErrorNotification error={error} onClose={() => setError(null)} />
     </>
   );
