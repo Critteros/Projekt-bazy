@@ -5,7 +5,6 @@ export const queryInfo = publicProcedure.query(({ ctx }) => {
     return ctx.session;
   }
 
-  console.log(ctx.session);
   const { login, roles } = ctx.session;
 
   return {

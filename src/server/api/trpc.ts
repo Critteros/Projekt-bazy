@@ -63,6 +63,7 @@ import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { getUserSession } from '@/server/services/session.service';
 import { AuthRoles } from '@/server/db/enums';
+import { hasRole } from '@/utils/roles';
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
@@ -106,8 +107,7 @@ const requireAuthRole = (roles: AccountRoles['name'][]) =>
       });
     }
 
-    const matchedRoles = intersection(ctx.session.roles, roles);
-    if (matchedRoles.length === 0) {
+    if (!hasRole(ctx.session.roles, roles)) {
       throw new TRPCError({
         code: 'FORBIDDEN',
         message: 'You do not have required permissions to view this resource',

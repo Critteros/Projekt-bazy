@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import ms from 'ms';
 import { setCookie, deleteCookie, getCookie } from 'cookies-next';
 import { z } from 'zod';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { IncomingMessage, ServerResponse } from 'http';
 
 import { env } from '$env/server.mjs';
 
@@ -31,8 +31,8 @@ export const createJWT = (content: JWTContent) => {
 };
 
 export type NextAPIBase = {
-  req: NextApiRequest;
-  res: NextApiResponse;
+  req: IncomingMessage;
+  res: ServerResponse;
 };
 
 export const setJWTCookie = (content: JWTContent, { req, res }: NextAPIBase) => {
