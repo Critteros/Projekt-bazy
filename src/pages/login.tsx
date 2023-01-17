@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import ms from 'ms';
 import { type NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
@@ -15,6 +14,7 @@ const Login: NextPage = () => {
   const router = useRouter();
   const formRef = useRef<LoginFormRef>();
   const [error, setError] = useState<string | null>(null);
+
   const loginMutation = api.auth.login.useMutation({
     onSuccess: async () => {
       await router.push('/');

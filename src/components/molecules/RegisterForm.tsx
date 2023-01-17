@@ -1,4 +1,4 @@
-// import Link from 'next/link';
+import { forwardRef, useImperativeHandle } from 'react';
 import { Box, Grid, Button, TextField, Link, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -26,66 +26,83 @@ const validationSchema = yup.object({
 
 type SchemaType = yup.InferType<typeof validationSchema>;
 
-type RegisterFormProps = {
+export type RegisterFormProps = {
   onSubmit: (values: SchemaType) => void;
 };
 
-export const RegisterForm = ({ onSubmit }: RegisterFormProps) => {
-  const formik = useFormik<SchemaType>({
-    initialValues: {
-      login: '',
-      password: '',
-      confirmPassword: '',
-    },
-    validationSchema,
-    onSubmit,
-  });
-  return (
-    <Box component={'form'} noValidate onSubmit={formik.handleSubmit} sx={{ mt: 1 }}>
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        autoFocus
-        id="login"
-        label="Login"
-        name="login"
-        value={formik.values.login}
-        onChange={formik.handleChange}
-        error={formik.touched.login && !!formik.errors.login}
-        helperText={formik.touched.login && formik.errors.login}
-      />
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        id="password"
-        label="Password"
-        name="password"
-        type="password"
-        autoComplete="current-password"
-        value={formik.values.password}
-        onChange={formik.handleChange}
-        error={formik.touched.password && !!formik.errors.password}
-        helperText={formik.touched.password && formik.errors.password}
-      />
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        id="confirm-password"
-        label="Confirm password"
-        name="confirmPassword"
-        type="password"
-        autoComplete="current-password"
-        value={formik.values.confirmPassword}
-        onChange={formik.handleChange}
-        error={formik.touched.confirmPassword && !!formik.errors.confirmPassword}
-        helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
-      />
-      <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-        <Typography sx={{ fontWeight: 'bold' }}>Register</Typography>
-      </Button>
-    </Box>
-  );
+export type RegisterFormRef = {
+  resetForm: () => void;
 };
+
+export const RegisterForm = forwardRef<RegisterFormRef | undefined, RegisterFormProps>(
+  ({ onSubmit }, ref) => {
+    const formik = useFormik<SchemaType>({
+      initialValues: {
+        login: '',
+        password: '',
+        confirmPassword: '',
+      },
+      validationSchema,
+      onSubmit,
+    });
+
+    useImperativeHandle(
+      ref,
+      () => {
+        return {
+          resetForm: formik.resetForm,
+        };
+      },
+      [formik],
+    );
+
+    return (
+      <Box component={'form'} noValidate onSubmit={formik.handleSubmit} sx={{ mt: 1 }}>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          autoFocus
+          id="login"
+          label="Login"
+          name="login"
+          value={formik.values.login}
+          onChange={formik.handleChange}
+          error={formik.touched.login && !!formik.errors.login}
+          helperText={formik.touched.login && formik.errors.login}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="password"
+          label="Password"
+          name="password"
+          type="password"
+          autoComplete="current-password"
+          value={formik.values.password}
+          onChange={formik.handleChange}
+          error={formik.touched.password && !!formik.errors.password}
+          helperText={formik.touched.password && formik.errors.password}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="confirm-password"
+          label="Confirm password"
+          name="confirmPassword"
+          type="password"
+          autoComplete="current-password"
+          value={formik.values.confirmPassword}
+          onChange={formik.handleChange}
+          error={formik.touched.confirmPassword && !!formik.errors.confirmPassword}
+          helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+        />
+        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+          <Typography sx={{ fontWeight: 'bold' }}>Register</Typography>
+        </Button>
+      </Box>
+    );
+  },
+);

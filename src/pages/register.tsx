@@ -1,14 +1,30 @@
+import Head from 'next/head';
 import { type NextPage } from 'next';
 import { useRouter } from 'next/router';
-import Head from 'next/head';
+import { useRef, useState } from 'react';
 import { Home } from '@mui/icons-material';
 
 import { AuthFormBase } from '@/components/atoms/AuthFormBase';
-import { RegisterForm } from '@/components/molecules/RegisterForm';
+import { RegisterForm, type RegisterFormRef } from '@/components/molecules/RegisterForm';
 import { CornerButton } from '@/components/atoms/CornerButton';
+import { api } from '@/utils/api';
+import { ErrorNotification } from '@/components/atoms/ErrorNotification';
 
 const Register: NextPage = () => {
+  const formRef = useRef<RegisterFormRef>();
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+
+  const registerMutation = api.auth.register.useMutation({
+    onSuccess: async () => {
+      await router.push('/');
+    },
+    onError: (error) => {
+      formRef.current?.resetForm();
+      setError(error.message);
+    },
+  });
+
   return (
     <>
       <Head>
@@ -22,8 +38,14 @@ const Register: NextPage = () => {
         <Home fontSize={'large'} />
       </CornerButton>
       <AuthFormBase title={'register'}>
-        <RegisterForm onSubmit={(data) => alert(JSON.stringify(data, null, 2))}></RegisterForm>
+        <RegisterForm
+          onSubmit={(data) => {
+            registerMutation.mutate(data);
+          }}
+          ref={formRef}
+        ></RegisterForm>
       </AuthFormBase>
+      <ErrorNotification error={error} onClose={() => setError(null)} />
     </>
   );
 };
