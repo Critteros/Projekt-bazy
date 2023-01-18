@@ -57,7 +57,7 @@ CREATE TABLE "account_role_relation"
 (
     "id"         SERIAL PRIMARY KEY,
     "account_id" INTEGER NOT NULL,
-    "role_id"    BIGINT  NOT NULL
+    "role_id"    INTEGER NOT NULL
 );
 
 CREATE TABLE "staff"

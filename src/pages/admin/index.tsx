@@ -1,6 +1,6 @@
 import type { GetServerSideProps } from 'next';
 import { useSession } from '@/hooks/useSession';
-import type { NextPageWithLayout } from './_app';
+import type { NextPageWithLayout } from '../_app';
 import { AdminLayout } from '@/components/templates/AdminLayout';
 import { withRoleProtection } from '@/middlewares/withRoleProtection';
 

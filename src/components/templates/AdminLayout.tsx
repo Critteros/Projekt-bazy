@@ -14,7 +14,6 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
   return (
     <PageWrapper sx={{ display: 'flex', flexDirection: 'column' }}>
       <SessionGuard />
-      {/*<Box sx={{ width: '100%' }}>*/}
       <NavBar />
       <Box
         sx={{
@@ -26,9 +25,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
         }}
       >
         <AdminDrawer />
-        <Box component={'main'} sx={{ flexGrow: 1, p: 3 }}>
-          {children}
-        </Box>
+        {children}
       </Box>
     </PageWrapper>
   );

@@ -14,11 +14,14 @@ import {
   ExpandLess,
   ExpandMore,
 } from '@mui/icons-material';
+import { useRouter } from 'next/router';
 
 import { api } from '@/utils/api';
+import { AppLink } from '@/components/atoms/AppLink';
 
 export const AdminTables = () => {
   const [open, setOpen] = useState(false);
+  const { query } = useRouter();
   const { data: tableInfo, isLoading } = api.tables.tableInfo.useQuery(undefined, {
     enabled: open,
   });
@@ -44,12 +47,18 @@ export const AdminTables = () => {
             </ListItem>
           ) : (
             tableInfo?.map(({ table_name: tableName }) => (
-              <ListItemButton sx={{ pl: 4 }} key={tableName}>
-                <ListItemIcon>
-                  <TableViewIcon />
-                </ListItemIcon>
-                <ListItemText primary={tableName} />
-              </ListItemButton>
+              <AppLink key={tableName} href={`/admin/tables/${tableName}`}>
+                <ListItemButton
+                  sx={{ pl: 4 }}
+                  key={tableName}
+                  selected={query?.tableName === tableName}
+                >
+                  <ListItemIcon>
+                    <TableViewIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={tableName} />
+                </ListItemButton>
+              </AppLink>
             ))
           )}
         </List>

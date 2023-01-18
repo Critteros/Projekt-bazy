@@ -97,3 +97,23 @@ export const RoomToRoomTypeRelationSchema = z.object({
   room_number: z.number(),
 });
 export type RoomToRoomTypeRelation = z.infer<typeof RoomToRoomTypeRelationSchema>;
+
+export const TableInfoSchema = z.object({
+  table_name: z.string(),
+  columns: z.array(z.string()),
+});
+export type TableInfo = z.infer<typeof TableInfoSchema>;
+
+export const DisallowedTablesSchema = z.object({
+  id: z.number(),
+  table_name: z.string(),
+});
+export type DisallowedTables = z.infer<typeof DisallowedTablesSchema>;
+
+export const UserInfoViewSchema = z.object({
+  login: z.string(),
+  roles: z.array(z.string()),
+  customer_profile: CustomerSchema.nullable(),
+  staff_profile: StaffSchema.nullable(),
+});
+export type UserInfoView = z.infer<typeof UserInfoViewSchema>;

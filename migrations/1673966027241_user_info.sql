@@ -13,16 +13,24 @@ DECLARE
 BEGIN
     BEGIN
         SELECT * INTO STRICT account_record FROM account WHERE account.login = get_user_info.login;
-        SELECT array_agg(name)
-        INTO roles
-        FROM account_role_relation
-                 JOIN account_roles USING (role_id)
-        WHERE account_id = account_record.account_id;
+
     EXCEPTION
         WHEN NO_DATA_FOUND THEN
             RAISE EXCEPTION 'No account found for login -> %', login;
 
     END;
+
+    SELECT array_agg(name)
+    INTO STRICT roles
+    FROM account_role_relation
+             JOIN account_roles USING (role_id)
+    WHERE account_id = account_record.account_id;
+
+    RAISE WARNING 'Roles -> %', roles;
+
+    IF roles IS NULL THEN
+        roles := array []::text[];
+    END IF;
 
 
     BEGIN
