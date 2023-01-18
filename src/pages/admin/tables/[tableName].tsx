@@ -1,5 +1,6 @@
 import type { GetServerSideProps } from 'next';
 import { Box } from '@mui/material';
+import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { startCase } from 'lodash';
 
@@ -9,6 +10,9 @@ import { withRoleProtection } from '@/middlewares/withRoleProtection';
 
 import { api } from '@/utils/api';
 import type { schemaMap } from '@/server/db/tableMap';
+import { CornerButton } from '@/components/atoms/CornerButton';
+import { AppLink } from '@/components/atoms/AppLink';
+import { IconWrapper } from '@/components/atoms/IconWrapper';
 
 type TableEditorProps = {
   tableName: keyof typeof schemaMap;
@@ -66,32 +70,49 @@ const TableEditor: NextPageWithLayout<TableEditorProps> = ({ tableName }) => {
     <Box
       component={'main'}
       sx={{
-        margin: 'auto',
-        height: '80%',
-        width: '80%',
+        height: '100%',
+        width: '100%',
         padding: 10,
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
       }}
     >
-      <DataGrid
-        columns={columns ?? []}
-        rows={
-          tableData?.map((topObject) => {
-            let row = {};
-            for (const [key, value] of Object.entries(topObject)) {
-              row = {
-                ...row,
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                [key]: typeof value === 'object' ? JSON.stringify(value) : value,
-              };
-            }
-            return row;
-          }) ?? []
-        }
-        getRowId={(row) => Object.values(row).join('_')}
-        components={{ Toolbar: GridToolbar }}
-        disableSelectionOnClick
-        loading={isLoading}
-      />
+      <AppLink href={'/admin'}>
+        <CornerButton>
+          <IconWrapper sx={{ color: 'white', m: 0.5 }}>
+            <ArrowBackIcon fontSize={'large'} />
+          </IconWrapper>
+        </CornerButton>
+      </AppLink>
+      <Box
+        sx={{
+          margin: 2,
+          flexGrow: 1,
+        }}
+      >
+        <DataGrid
+          columns={columns ?? []}
+          rows={
+            tableData?.map((topObject) => {
+              let row = {};
+              for (const [key, value] of Object.entries(topObject)) {
+                row = {
+                  ...row,
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                  [key]: typeof value === 'object' ? JSON.stringify(value) : value,
+                };
+              }
+              return row;
+            }) ?? []
+          }
+          getRowId={(row) => Object.values(row).join('_')}
+          components={{ Toolbar: GridToolbar }}
+          disableSelectionOnClick
+          loading={isLoading}
+        />
+      </Box>
     </Box>
   );
 };
