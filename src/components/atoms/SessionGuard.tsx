@@ -8,13 +8,13 @@ export type SessionGuardProps = {
 
 export const SessionGuard = ({ fallbackUrl }: SessionGuardProps) => {
   const router = useRouter();
-  const { session } = useSession();
+  const { session, isLoading } = useSession();
 
   useEffect(() => {
-    if (!session) {
+    if (!isLoading && !session) {
       void router.push(fallbackUrl ?? '/login');
     }
-  }, [session, router, fallbackUrl]);
+  }, [session, router, fallbackUrl, isLoading]);
 
   return <></>;
 };

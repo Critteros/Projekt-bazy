@@ -11,7 +11,7 @@ import { AppLink } from '@/components/atoms/AppLink';
 export const NavBar = () => {
   const { session } = useSession();
   return (
-    <AppBar position="static">
+    <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, flexGrow: 0 }}>
       <Container>
         <Toolbar disableGutters>
           <AppLink

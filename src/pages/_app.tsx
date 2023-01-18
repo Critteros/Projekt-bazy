@@ -6,7 +6,7 @@ import { ThemeProvider, CssBaseline } from '@mui/material';
 import { api } from '@/utils/api';
 import { theme } from '@/style/theme';
 
-export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+export type NextPageWithLayout<P = Record<string, unknown>, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
