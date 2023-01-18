@@ -1,12 +1,14 @@
 import { Container } from '@mui/material';
 
-import { NavBar } from '@/components/organisms/NavBar';
 import { AdminPanelCard } from '@/components/atoms/AdminPanelCard';
-import { PageWrapper } from '@/components/atoms/PageWrapper';
 import { api } from '@/utils/api';
 
 import type { NextPageWithLayout } from './_app';
 import { CardContainer } from '@/components/atoms/CardContainer';
+import { MyReservationsCard } from '@/components/atoms/MyReservationsCard';
+import { CreateReservationCard } from '@/components/atoms/CreateReservationCard';
+import { ProfileCard } from '@/components/atoms/ProfileCard';
+import { SimpleLayout } from '@/components/templates/SimpleLayout';
 
 const Home: NextPageWithLayout = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -19,22 +21,21 @@ const Home: NextPageWithLayout = () => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        flexDirection: 'column',
       }}
     >
       <CardContainer>
+        <ProfileCard />
         <AdminPanelCard />
+        <MyReservationsCard />
+        <CreateReservationCard />
       </CardContainer>
     </Container>
   );
 };
 
 Home.getLayout = (page) => {
-  return (
-    <PageWrapper>
-      <NavBar />
-      {page}
-    </PageWrapper>
-  );
+  return <SimpleLayout>{page}</SimpleLayout>;
 };
 
 export default Home;

@@ -35,6 +35,12 @@ export const NavBar = () => {
             </Typography>
           </AppLink>
           <Spacer />
+          {session && (
+            <Typography
+              component={'div'}
+              sx={{ mr: 2, fontWeight: 'bold', color: 'inherit', textTransform: 'none' }}
+            >{`Logged as ${session}`}</Typography>
+          )}
           {session ? <LogoutButton /> : <LoginOrSignup />}
         </Toolbar>
       </Container>
