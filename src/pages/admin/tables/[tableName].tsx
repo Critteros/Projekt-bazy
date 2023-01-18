@@ -1,5 +1,7 @@
 import type { GetServerSideProps } from 'next';
-import { Box, CircularProgress } from '@mui/material';
+import { Box } from '@mui/material';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { startCase } from 'lodash';
 
 import type { NextPageWithLayout } from '../../_app';
 import { AdminLayout } from '@/components/templates/AdminLayout';
@@ -44,37 +46,52 @@ export const getServerSideProps: GetServerSideProps = withRoleProtection(
 );
 
 const TableEditor: NextPageWithLayout<TableEditorProps> = ({ tableName }) => {
-  const { data: tableData, isLoading } = api.tables.tableData.useQuery({
+  const { data: tableInfoData } = api.tables.tableInfo.useQuery({
+    tableNames: [tableName],
+  });
+  const { data: tableData } = api.tables.tableData.useQuery({
     tableName,
   });
 
-  if (isLoading) {
-    return (
-      <Box
-        component={'main'}
-        sx={{
-          margin: 'auto',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
+  const isLoading = !tableInfoData || !tableData;
+
+  const columns = tableInfoData?.[0]?.columns.map((column) => ({
+    field: column,
+    headerName: startCase(column),
+    sortable: true,
+    flex: 1,
+  }));
 
   return (
     <Box
       component={'main'}
       sx={{
         margin: 'auto',
+        height: '80%',
+        width: '80%',
+        padding: 10,
       }}
     >
-      <pre>
-        <code>{JSON.stringify(tableData, null, 2)}</code>
-      </pre>
+      <DataGrid
+        columns={columns ?? []}
+        rows={
+          tableData?.map((topObject) => {
+            let row = {};
+            for (const [key, value] of Object.entries(topObject)) {
+              row = {
+                ...row,
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                [key]: typeof value === 'object' ? JSON.stringify(value) : value,
+              };
+            }
+            return row;
+          }) ?? []
+        }
+        getRowId={(row) => Object.values(row).join('_')}
+        components={{ Toolbar: GridToolbar }}
+        disableSelectionOnClick
+        loading={isLoading}
+      />
     </Box>
   );
 };

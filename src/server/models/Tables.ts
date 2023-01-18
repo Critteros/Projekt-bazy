@@ -10,7 +10,7 @@ export class Tables {
 
   public async getTableInfo(tableNames?: string[]) {
     const query = await this.dbPool.query<TableInfo>({
-      name: 'get-table-info',
+      name: `get-table-info-${tableNames?.join('-') ?? 'all'}`,
       text: `SELECT table_name, columns::text[] FROM table_info ${
         tableNames ? 'WHERE table_name = ANY($1::text[])' : ''
       }`,
