@@ -1,29 +1,10 @@
 import type { GetServerSideProps } from 'next';
 import { useSession } from '@/hooks/useSession';
-import { checkSessionRole } from '@/server/services/session.service';
 import type { NextPageWithLayout } from './_app';
 import { AdminLayout } from '@/components/templates/AdminLayout';
+import { withRoleProtection } from '@/middlewares/withRoleProtection';
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const hasRole = await checkSessionRole({
-    req,
-    res,
-    role: 'admin',
-  });
-  if (hasRole) {
-    return {
-      props: {},
-    };
-  }
-
-  return {
-    props: {},
-    redirect: {
-      destination: '/',
-      permanent: false,
-    },
-  };
-};
+export const getServerSideProps: GetServerSideProps = withRoleProtection('admin');
 
 const AdminPage: NextPageWithLayout = () => {
   const { session } = useSession();
