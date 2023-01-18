@@ -9,6 +9,7 @@ import { LoginForm, type LoginFormRef } from '@/components/molecules/LoginForm';
 import { CornerButton } from '@/components/atoms/CornerButton';
 import { api } from '@/utils/api';
 import { ErrorNotification } from '@/components/atoms/ErrorNotification';
+import { AppLink } from '@/components/atoms/AppLink';
 
 const Login: NextPage = () => {
   const router = useRouter();
@@ -32,13 +33,11 @@ const Login: NextPage = () => {
       <Head>
         <title>Login</title>
       </Head>
-      <CornerButton
-        onClick={() => {
-          void router.push('/');
-        }}
-      >
-        <Home fontSize={'large'} />
-      </CornerButton>
+      <AppLink href={'/'}>
+        <CornerButton>
+          <Home fontSize={'large'} />
+        </CornerButton>
+      </AppLink>
       <AuthFormBase title={'login'}>
         <LoginForm
           onSubmit={(values) => {

@@ -4,7 +4,7 @@ import { AdminPanelSettings as AdminPanelIcon } from '@mui/icons-material';
 import { IconWrapper } from '@/components/atoms/IconWrapper';
 
 type AdminPanelCardProps = {
-  onClick: () => void;
+  onClick?: () => void;
 };
 
 export const AdminPanelCard = ({ onClick }: AdminPanelCardProps) => {

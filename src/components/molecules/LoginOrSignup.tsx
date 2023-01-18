@@ -1,22 +1,17 @@
 import { Box } from '@mui/material';
-import { useRouter } from 'next/router';
 import { LoginButton } from '@/components/atoms/LoginButton';
 import { RegisterButton } from '@/components/atoms/RegisterButton';
+import { AppLink } from '@/components/atoms/AppLink';
 
 export const LoginOrSignup = () => {
-  const router = useRouter();
   return (
     <Box sx={{ display: 'flex', gap: 2 }}>
-      <LoginButton
-        onClick={() => {
-          void router.push('/login');
-        }}
-      />
-      <RegisterButton
-        onClick={() => {
-          void router.push('/register');
-        }}
-      />
+      <AppLink href={'/login'}>
+        <LoginButton />
+      </AppLink>
+      <AppLink href={'/register'}>
+        <RegisterButton />
+      </AppLink>
     </Box>
   );
 };

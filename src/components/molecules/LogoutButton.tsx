@@ -1,6 +1,7 @@
 import { Typography, type ButtonProps, type TypographyProps } from '@mui/material';
 import { Logout as LogoutIcon } from '@mui/icons-material';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 import { api } from '@/utils/api';
 import { ErrorNotification } from '@/components/atoms/ErrorNotification';
@@ -8,17 +9,17 @@ import { IconWrapper } from '@/components/atoms/IconWrapper';
 import { AppButton } from '@/components/atoms/AppButton';
 
 type LogoutButtonProps = {
-  onLogout?: () => void;
   typographyProps?: TypographyProps;
 } & Omit<ButtonProps, 'onClick'>;
 
-export const LogoutButton = ({ onLogout, typographyProps, ...props }: LogoutButtonProps) => {
+export const LogoutButton = ({ typographyProps, ...props }: LogoutButtonProps) => {
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
   const trpcContext = api.useContext();
   const logoutMutation = api.auth.logout.useMutation({
     onSuccess: async () => {
       await trpcContext.session.info.invalidate();
-      onLogout?.();
+      router.reload();
     },
     onError: (error) => {
       setError(error.message);
