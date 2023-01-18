@@ -6,8 +6,6 @@
  * tl;dr - this is where all the tRPC server stuff is created and plugged in.
  * The pieces you will need to use are documented accordingly near the end
  */
-import { intersection } from 'lodash';
-
 import { client as dbClient } from '@/server/db/client';
 import type { AccountRoles } from '@/server/db/tableSchema';
 
@@ -62,7 +60,6 @@ export const createTRPCContext = async ({ req, res }: CreateNextContextOptions) 
 import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { getUserSession } from '@/server/services/session.service';
-import { AuthRoles } from '@/server/db/enums';
 import { hasRole } from '@/utils/roles';
 
 const t = initTRPC.context<typeof createTRPCContext>().create({

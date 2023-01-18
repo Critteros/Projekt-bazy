@@ -8,17 +8,15 @@ import { IconWrapper } from '@/components/atoms/IconWrapper';
 import { AppButton } from '@/components/atoms/AppButton';
 
 type LogoutButtonProps = {
-  onLogout?: () => void;
   typographyProps?: TypographyProps;
 } & Omit<ButtonProps, 'onClick'>;
 
-export const LogoutButton = ({ onLogout, typographyProps, ...props }: LogoutButtonProps) => {
+export const LogoutButton = ({ typographyProps, ...props }: LogoutButtonProps) => {
   const [error, setError] = useState<string | null>(null);
   const trpcContext = api.useContext();
   const logoutMutation = api.auth.logout.useMutation({
     onSuccess: async () => {
       await trpcContext.session.info.invalidate();
-      onLogout?.();
     },
     onError: (error) => {
       setError(error.message);

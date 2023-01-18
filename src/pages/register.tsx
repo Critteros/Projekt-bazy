@@ -9,6 +9,7 @@ import { RegisterForm, type RegisterFormRef } from '@/components/molecules/Regis
 import { CornerButton } from '@/components/atoms/CornerButton';
 import { api } from '@/utils/api';
 import { ErrorNotification } from '@/components/atoms/ErrorNotification';
+import { AppLink } from '@/components/atoms/AppLink';
 
 const Register: NextPage = () => {
   const formRef = useRef<RegisterFormRef>();
@@ -32,13 +33,11 @@ const Register: NextPage = () => {
       <Head>
         <title>Register</title>
       </Head>
-      <CornerButton
-        onClick={() => {
-          void router.push('/');
-        }}
-      >
-        <Home fontSize={'large'} />
-      </CornerButton>
+      <AppLink href={'/'}>
+        <CornerButton>
+          <Home fontSize={'large'} />
+        </CornerButton>
+      </AppLink>
       <AuthFormBase title={'register'}>
         <RegisterForm
           onSubmit={(data) => {
