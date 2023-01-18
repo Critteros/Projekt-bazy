@@ -1,7 +1,6 @@
 import { Typography, type ButtonProps, type TypographyProps } from '@mui/material';
 import { Logout as LogoutIcon } from '@mui/icons-material';
 import { useState } from 'react';
-import { useRouter } from 'next/router';
 
 import { api } from '@/utils/api';
 import { ErrorNotification } from '@/components/atoms/ErrorNotification';
@@ -14,12 +13,10 @@ type LogoutButtonProps = {
 
 export const LogoutButton = ({ typographyProps, ...props }: LogoutButtonProps) => {
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
   const trpcContext = api.useContext();
   const logoutMutation = api.auth.logout.useMutation({
     onSuccess: async () => {
       await trpcContext.session.info.invalidate();
-      router.reload();
     },
     onError: (error) => {
       setError(error.message);

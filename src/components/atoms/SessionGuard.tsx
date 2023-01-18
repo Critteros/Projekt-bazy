@@ -12,7 +12,7 @@ export const SessionGuard = ({ fallbackUrl }: SessionGuardProps) => {
 
   useEffect(() => {
     if (!isLoading && !session) {
-      void router.push(fallbackUrl ?? '/login');
+      void router.push(fallbackUrl ?? '/');
     }
   }, [session, router, fallbackUrl, isLoading]);
 

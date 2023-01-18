@@ -1,21 +1,23 @@
-import { Box, Drawer, List, ListSubheader, Toolbar } from '@mui/material';
+import { Drawer, List, ListSubheader } from '@mui/material';
 import { AdminTables } from '@/components/organisms/AdminTables';
-
-const drawerWidth = 240;
+import { DrawerContent } from '@/components/atoms/DrawerContent';
 
 export const AdminDrawer = () => {
   return (
     <Drawer
       variant={'permanent'}
-      anchor={'left'}
       sx={{
-        flexShrink: 0,
-        width: drawerWidth,
-        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+        position: 'relative',
+        overflowY: 'auto',
+        width: 360,
+        [`& .MuiDrawer-paper`]: {
+          width: 360,
+          boxSizing: 'border-box',
+          position: 'relative',
+        },
       }}
     >
-      <Toolbar />
-      <Box overflow={'auto'}>
+      <DrawerContent>
         <List
           sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
           component="nav"
@@ -27,7 +29,7 @@ export const AdminDrawer = () => {
         >
           <AdminTables />
         </List>
-      </Box>
+      </DrawerContent>
     </Drawer>
   );
 };

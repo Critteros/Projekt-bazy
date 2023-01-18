@@ -1,4 +1,12 @@
-import { ListItemButton, Collapse, ListItemText, ListItemIcon, List } from '@mui/material';
+import {
+  ListItemButton,
+  Collapse,
+  ListItemText,
+  ListItemIcon,
+  List,
+  CircularProgress,
+  ListItem,
+} from '@mui/material';
 import { useState } from 'react';
 import {
   TableView as TableViewIcon,
@@ -7,10 +15,13 @@ import {
   ExpandMore,
 } from '@mui/icons-material';
 
+import { api } from '@/utils/api';
+
 export const AdminTables = () => {
   const [open, setOpen] = useState(false);
-
-  const tables = ['table1', 'table2', 'table3'];
+  const { data: tableInfo, isLoading } = api.tables.tableInfo.useQuery(undefined, {
+    enabled: open,
+  });
 
   const handleClick = () => {
     setOpen((prevState) => !prevState);
@@ -27,14 +38,20 @@ export const AdminTables = () => {
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component={'div'} disablePadding>
-          {tables.map((tableName) => (
-            <ListItemButton sx={{ pl: 4 }} key={tableName}>
-              <ListItemIcon>
-                <TableViewIcon />
-              </ListItemIcon>
-              <ListItemText primary={tableName} />
-            </ListItemButton>
-          ))}
+          {isLoading ? (
+            <ListItem sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {isLoading && <CircularProgress />}
+            </ListItem>
+          ) : (
+            tableInfo?.map(({ table_name: tableName }) => (
+              <ListItemButton sx={{ pl: 4 }} key={tableName}>
+                <ListItemIcon>
+                  <TableViewIcon />
+                </ListItemIcon>
+                <ListItemText primary={tableName} />
+              </ListItemButton>
+            ))
+          )}
         </List>
       </Collapse>
     </>
