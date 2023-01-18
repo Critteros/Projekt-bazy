@@ -12,7 +12,7 @@ type AdminLayoutProps = {
 
 export const AdminLayout = ({ children }: AdminLayoutProps) => {
   return (
-    <PageWrapper sx={{ display: 'flex', flexDirection: 'column' }}>
+    <PageWrapper>
       <SessionGuard />
       <NavBar />
       <Box

@@ -7,7 +7,7 @@ export const theme = createTheme({
   components: {
     MuiCssBaseline: {
       styleOverrides: {
-        body: {
+        '*': {
           '*::-webkit-scrollbar': {
             width: '0.4em',
           },

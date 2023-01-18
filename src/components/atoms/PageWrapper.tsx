@@ -11,7 +11,8 @@ export const PageWrapper = ({ children, sx }: PageWrapperProps) => {
     <Box
       sx={{
         height: '100vh',
-        display: 'block',
+        display: 'flex',
+        flexDirection: 'column',
         ...sx,
       }}
     >
