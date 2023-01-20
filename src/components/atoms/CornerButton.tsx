@@ -14,6 +14,7 @@ const boxStyles = {
   top: 0,
   left: 0,
   m: 2,
+  color: 'white',
 } satisfies SxStyles;
 
 export const CornerButton = ({ children, sx, onClick }: CornerButtonProps) => {
@@ -24,7 +25,9 @@ export const CornerButton = ({ children, sx, onClick }: CornerButtonProps) => {
         ...(sx ?? {}),
       }}
     >
-      <Button onClick={onClick}>{children}</Button>
+      <Button onClick={onClick} sx={{ color: 'inherit' }}>
+        {children}
+      </Button>
     </Box>
   );
 };

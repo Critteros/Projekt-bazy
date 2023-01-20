@@ -7,9 +7,10 @@ import { Home } from '@mui/icons-material';
 import { AuthFormBase } from '@/components/atoms/AuthFormBase';
 import { LoginForm, type LoginFormRef } from '@/components/molecules/LoginForm';
 import { CornerButton } from '@/components/atoms/CornerButton';
-import { api } from '@/utils/api';
-import { ErrorNotification } from '@/components/atoms/ErrorNotification';
+import { Notification } from '@/components/atoms/Notification';
 import { AppLink } from '@/components/atoms/AppLink';
+
+import { api } from '@/utils/api';
 
 const Login: NextPage = () => {
   const router = useRouter();
@@ -46,7 +47,7 @@ const Login: NextPage = () => {
           ref={formRef}
         />
       </AuthFormBase>
-      <ErrorNotification error={error} onClose={() => setError(null)} />
+      <Notification message={error} severity={'error'} onClose={() => setError(null)} />
     </>
   );
 };

@@ -7,9 +7,10 @@ import { Home } from '@mui/icons-material';
 import { AuthFormBase } from '@/components/atoms/AuthFormBase';
 import { RegisterForm, type RegisterFormRef } from '@/components/molecules/RegisterForm';
 import { CornerButton } from '@/components/atoms/CornerButton';
-import { api } from '@/utils/api';
-import { ErrorNotification } from '@/components/atoms/ErrorNotification';
+import { Notification } from '@/components/atoms/Notification';
 import { AppLink } from '@/components/atoms/AppLink';
+
+import { api } from '@/utils/api';
 
 const Register: NextPage = () => {
   const formRef = useRef<RegisterFormRef>();
@@ -46,7 +47,7 @@ const Register: NextPage = () => {
           ref={formRef}
         ></RegisterForm>
       </AuthFormBase>
-      <ErrorNotification error={error} onClose={() => setError(null)} />
+      <Notification message={error} severity={'error'} onClose={() => setError(null)} />
     </>
   );
 };

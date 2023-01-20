@@ -3,7 +3,7 @@ import { Logout as LogoutIcon } from '@mui/icons-material';
 import { useState } from 'react';
 
 import { api } from '@/utils/api';
-import { ErrorNotification } from '@/components/atoms/ErrorNotification';
+import { Notification } from '@/components/atoms/Notification';
 import { IconWrapper } from '@/components/atoms/IconWrapper';
 import { AppButton } from '@/components/atoms/AppButton';
 
@@ -31,7 +31,7 @@ export const LogoutButton = ({ typographyProps, ...props }: LogoutButtonProps) =
         </IconWrapper>
         <Typography {...typographyProps}>Logout</Typography>
       </AppButton>
-      <ErrorNotification error={error} onClose={() => setError(null)} />
+      <Notification error={error} onClose={() => setError(null)} />
     </>
   );
 };

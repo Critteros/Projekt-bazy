@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt';
 
 import type { Account as AccountTable } from '@/server/db/tableSchema';
 import type { AccountInfo } from '@/server/db/session';
+import type { ChangePasswordRequest } from '@/dto/account';
+import { TRPCError } from '@trpc/server';
 
 export class Account {
   constructor(private dbPool: Pool) {}
@@ -62,5 +64,47 @@ export class Account {
     });
 
     return query.rows[0];
+  }
+
+  public async changePassword({
+    oldPassword,
+    newPassword,
+    login,
+  }: ChangePasswordRequest & { login: AccountTable['login'] }) {
+    // 1) Query old password from the database
+    type RowType = Pick<AccountTable, 'password'>;
+    const queryResult = await this.dbPool.query<RowType>({
+      name: `query-user-password`,
+      text: 'SELECT password FROM account WHERE login=$1',
+      values: [login],
+    });
+
+    const returnedInfo = queryResult.rows[0];
+    if (!returnedInfo) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'User does not exists in a database',
+      });
+    }
+
+    // Test if old password matches
+    if (!(await bcrypt.compare(oldPassword, returnedInfo.password))) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Old password does not match',
+      });
+    }
+
+    // Encrypt new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update db
+    const result = await this.dbPool.query({
+      name: 'update-password',
+      text: 'UPDATE account SET password=$1 WHERE login=$2',
+      values: [hashedPassword, login],
+    });
+
+    console.log(result);
   }
 }

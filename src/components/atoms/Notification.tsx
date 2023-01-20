@@ -1,20 +1,25 @@
 import { type SyntheticEvent, useState, useEffect } from 'react';
-import { Alert, Snackbar, type SnackbarCloseReason } from '@mui/material';
+import { Alert, Snackbar, type SnackbarCloseReason, type AlertProps } from '@mui/material';
 import ms from 'ms';
 
 type ErrorNotificationProps = {
-  error: string | null | undefined;
+  message: string | null | undefined;
   onClose?: () => void;
   timeToClose?: string;
-};
+} & Pick<AlertProps, 'severity'>;
 
-export const ErrorNotification = ({ error, onClose, timeToClose }: ErrorNotificationProps) => {
+export const Notification = ({
+  message,
+  onClose,
+  timeToClose,
+  severity,
+}: ErrorNotificationProps) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (!error) return;
+    if (!message) return;
     setOpen(true);
-  }, [error]);
+  }, [message]);
 
   const handleClose = (event?: SyntheticEvent | Event, reason?: SnackbarCloseReason) => {
     if (reason === 'clickaway') {
@@ -24,7 +29,7 @@ export const ErrorNotification = ({ error, onClose, timeToClose }: ErrorNotifica
     onClose?.();
   };
 
-  if (!error) {
+  if (!message) {
     return <></>;
   }
 
@@ -38,8 +43,8 @@ export const ErrorNotification = ({ error, onClose, timeToClose }: ErrorNotifica
       }}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
     >
-      <Alert onClose={handleClose} severity={'error'} sx={{ width: '100%' }}>
-        {error}
+      <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
+        {message}
       </Alert>
     </Snackbar>
   );
