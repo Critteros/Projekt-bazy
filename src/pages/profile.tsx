@@ -44,9 +44,11 @@ const ProfilePage: NextPageWithLayout<{ session: AccountInfo }> = ({ session }) 
             <Typography variant={'h6'}>{session.login}</Typography>
           </Stack>
           <Divider orientation={'horizontal'} sx={{ marginY: 2 }} />
-          <AccountDetails />
-          <CustomerProfile />
-          <StaffProfile />
+          <Stack direction={'column'} gap={2}>
+            <AccountDetails />
+            <CustomerProfile />
+            <StaffProfile />
+          </Stack>
         </Paper>
       </Container>
     </>

@@ -22,8 +22,12 @@ export const StaffProfile = () => {
   return (
     <Collapsable title={'Staff Profile'}>
       <Align>
-        <KeyText></KeyText>
-        <Typography></Typography>
+        <KeyText>Firstname:</KeyText>
+        <Typography>{data.firstname}</Typography>
+        <KeyText>Lastname:</KeyText>
+        <Typography>{data.lastname}</Typography>
+        <KeyText>Job Title:</KeyText>
+        <Typography>{data.job_title}</Typography>
       </Align>
     </Collapsable>
   );
