@@ -13,6 +13,7 @@ import { CustomerProfile } from '@/components/molecules/CustomerProfile';
 import { AccountDetails } from '@/components/molecules/AccountDetails';
 
 import type { NextPageWithLayout } from './_app';
+import { StaffProfile } from '@/components/molecules/StaffProfile';
 
 export const getServerSideProps = withSessionProtection();
 
@@ -45,6 +46,7 @@ const ProfilePage: NextPageWithLayout<{ session: AccountInfo }> = ({ session }) 
           <Divider orientation={'horizontal'} sx={{ marginY: 2 }} />
           <AccountDetails />
           <CustomerProfile />
+          <StaffProfile />
         </Paper>
       </Container>
     </>

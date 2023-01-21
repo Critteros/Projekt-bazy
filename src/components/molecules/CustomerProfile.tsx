@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Stack, Typography, Box, Skeleton } from '@mui/material';
+import { Stack, Typography, Skeleton } from '@mui/material';
 
 import { useSession } from '@/hooks/useSession';
 import { api } from '@/utils/api';
@@ -7,6 +7,8 @@ import { api } from '@/utils/api';
 import { KeyText } from '@/components/atoms/KeyText';
 import { AppButton } from '@/components/atoms/AppButton';
 import { UpdateCustomerDataDialog } from '@/components/molecules/UpdateCustomerDataDialog';
+import { Collapsable } from '@/components/molecules/Collapsable';
+import { Align } from '@/components/atoms/Align';
 
 export const CustomerProfile = () => {
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
@@ -50,16 +52,7 @@ export const CustomerProfile = () => {
   const InnerProfileData = () => {
     return (
       <>
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: 'auto 1fr',
-            alignItems: 'center',
-            columnGap: 5,
-            rowGap: 2,
-            marginY: 2,
-          }}
-        >
+        <Align>
           <KeyText>Firstname:</KeyText>
           <Typography>{profileData.firstname}</Typography>
           <KeyText>Lastname:</KeyText>
@@ -70,7 +63,7 @@ export const CustomerProfile = () => {
           <Typography>{profileData.gender}</Typography>
           <KeyText>Contact Number:</KeyText>
           <Typography>{profileData.contact_number}</Typography>
-        </Box>
+        </Align>
         <AppButton variant={'outlined'} onClick={() => setUpdateDialogOpen(true)}>
           Update Information
         </AppButton>
@@ -97,5 +90,9 @@ export const CustomerProfile = () => {
     );
   }
 
-  return <></>;
+  return (
+    <Collapsable title={'Customer Profile'}>
+      <InnerProfileData />
+    </Collapsable>
+  );
 };
