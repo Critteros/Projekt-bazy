@@ -16,6 +16,10 @@ import { ColorAvatar } from '@/components/atoms/ColorAvatar';
 import { AdminPasswordChange } from '@/components/molecules/AdminPasswordChange';
 import { GridCustomerProfile } from '@/components/molecules/GridCustomerProfile';
 import { GridStaffProfile } from '@/components/molecules/GridStaffProfile';
+import { CornerButton } from '@/components/atoms/CornerButton';
+import { IconWrapper } from '@/components/atoms/IconWrapper';
+import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
+import { AppLink } from '@/components/atoms/AppLink';
 
 export const getServerSideProps: GetServerSideProps = withRoleProtection('admin');
 
@@ -150,6 +154,13 @@ AdminAccounts.getLayout = (page) => {
       <Head>
         <title>Accounts</title>
       </Head>
+      <AppLink href={'/admin'}>
+        <CornerButton>
+          <IconWrapper sx={{ color: 'white', m: 0.5 }}>
+            <ArrowBackIcon fontSize={'large'} />
+          </IconWrapper>
+        </CornerButton>
+      </AppLink>
       {page}
     </AdminLayout>
   );

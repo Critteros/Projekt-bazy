@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import type { GetServerSideProps } from 'next';
 import { Skeleton, Stack } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
+import { Add as AddIcon, ArrowBack as ArrowBackIcon } from '@mui/icons-material';
 import {
   DataGrid,
   type GridColDef,
@@ -27,6 +27,9 @@ import { GridDeleteStaff } from '@/components/molecules/GridDeleteStaff';
 import { AppButton } from '@/components/atoms/AppButton';
 import { useState } from 'react';
 import { AddStaffDialog } from '@/components/organisms/AddStaffDialog';
+import { AppLink } from '@/components/atoms/AppLink';
+import { CornerButton } from '@/components/atoms/CornerButton';
+import { IconWrapper } from '@/components/atoms/IconWrapper';
 
 export const getServerSideProps: GetServerSideProps = withRoleProtection('admin');
 
@@ -181,6 +184,13 @@ AdminManageStaff.getLayout = (page) => {
       <Head>
         <title>Manage Staff</title>
       </Head>
+      <AppLink href={'/admin'}>
+        <CornerButton>
+          <IconWrapper sx={{ color: 'white', m: 0.5 }}>
+            <ArrowBackIcon fontSize={'large'} />
+          </IconWrapper>
+        </CornerButton>
+      </AppLink>
       {page}
     </AdminLayout>
   );

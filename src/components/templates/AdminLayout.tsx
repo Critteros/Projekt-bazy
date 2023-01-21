@@ -5,6 +5,10 @@ import { SessionGuard } from '@/components/atoms/SessionGuard';
 import { NavBar } from '@/components/organisms/NavBar';
 import { AdminDrawer } from '@/components/organisms/AdminDrawer';
 import { PageWrapper } from '@/components/atoms/PageWrapper';
+import { CornerButton } from '@/components/atoms/CornerButton';
+import { IconWrapper } from '@/components/atoms/IconWrapper';
+import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
+import { AppLink } from '@/components/atoms/AppLink';
 
 type AdminLayoutProps = {
   children: ReactNode;
@@ -25,7 +29,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
         }}
       >
         <AdminDrawer />
-        {children}
+        <Box sx={{ display: 'flex', flexGrow: 1, position: 'relative' }}>{children}</Box>
       </Box>
     </PageWrapper>
   );
