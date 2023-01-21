@@ -37,13 +37,24 @@ export class Account {
     if (typeof data === 'string') {
       query = await this.dbPool.query<AccountInfo>({
         name: 'fetch-session',
-        text: 'SELECT (get_user_info($1)).*',
+        text: `SELECT 
+                    v.login,
+                    v.roles,
+                    row_to_json(v.customer_profile) AS customer_profile,
+                    row_to_json(v.staff_profile) AS staff_profile
+                    FROM user_info_view v WHERE login=$1`,
         values: [data],
       });
     } else {
       query = await this.dbPool.query<AccountInfo>({
         name: 'fetch-session',
-        text: 'SELECT (get_user_info(a.login)).* FROM account a WHERE a.account_id=$1',
+        text: `WITH cte AS (SELECT login FROM account WHERE account_id=$1)
+                SELECT 
+                    v.login,
+                    v.roles,
+                    row_to_json(v.customer_profile) AS customer_profile,
+                    row_to_json(v.staff_profile) AS staff_profile
+                    FROM user_info_view v,cte WHERE v.login=cte.login;`,
         values: [data],
       });
     }
@@ -105,6 +116,11 @@ export class Account {
       values: [hashedPassword, login],
     });
 
-    console.log(result);
+    if (result.rowCount !== 1) {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Unsuccessful UPDATE query',
+      });
+    }
   }
 }

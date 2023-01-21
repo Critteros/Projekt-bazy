@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { useRouter } from 'next/router';
 import { useSession } from '@/hooks/useSession';
 
 export type SessionGuardProps = {
@@ -7,14 +6,13 @@ export type SessionGuardProps = {
 };
 
 export const SessionGuard = ({ fallbackUrl }: SessionGuardProps) => {
-  const router = useRouter();
   const { session, isLoading } = useSession();
 
   useEffect(() => {
     if (!isLoading && !session) {
-      void router.push(fallbackUrl ?? '/');
+      window.location.replace(fallbackUrl ?? '/');
     }
-  }, [session, router, fallbackUrl, isLoading]);
+  }, [session, fallbackUrl, isLoading]);
 
   return <></>;
 };

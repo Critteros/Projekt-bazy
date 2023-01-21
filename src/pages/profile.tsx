@@ -30,7 +30,6 @@ const ProfilePage: NextPageWithLayout<{ session: AccountInfo }> = ({ session }) 
         </AppLink>
         <Paper
           variant={'outlined'}
-          elevation={3}
           sx={{
             maxWidth: 500,
             marginX: 'auto',
@@ -44,8 +43,8 @@ const ProfilePage: NextPageWithLayout<{ session: AccountInfo }> = ({ session }) 
             <Typography variant={'h6'}>{session.login}</Typography>
           </Stack>
           <Divider orientation={'horizontal'} sx={{ marginY: 2 }} />
-          <AccountDetails session={session} />
-          <CustomerProfile session={session} />
+          <AccountDetails />
+          <CustomerProfile />
         </Paper>
       </Container>
     </>

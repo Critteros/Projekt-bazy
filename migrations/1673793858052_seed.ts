@@ -41,7 +41,7 @@ export async function up(pgm: MigrationBuilder) {
   // Basic Accounts
   pgm.sql(sql`INSERT INTO account (login, password)
               VALUES ('admin', ${await getHash('admin')}),
-                     ('customer', ${await getHash('admin')}),
+                     ('customer', ${await getHash('customer')}),
                      ('staff', ${await getHash('staff')});`);
   pgm.sql(sql`INSERT INTO account_role_relation (account_id, role_id)
               VALUES ((SELECT account_id FROM account WHERE login = 'admin'),
