@@ -15,18 +15,17 @@ BEGIN
     END;
 
     -- Check if the user have already the staff role
-    IF (TG_OP = 'INSERT' AND
+    IF
         EXISTS(SELECT 1
                FROM account_role_relation
                WHERE account_id = NEW.account_id
-                 AND role_id = staff_id)) THEN
+                 AND role_id = staff_role_id) THEN
         RETURN NEW;
     END IF;
 
     -- Insert a staff role for the user
-    IF (TG_OP = 'INSERT') THEN
-        INSERT INTO account_role_relation (account_id, role_id) VALUES (NEW.account_id, staff_role_id);
-    END IF;
+    INSERT INTO account_role_relation (account_id, role_id) VALUES (NEW.account_id, staff_role_id);
+
 
     RETURN NEW;
 

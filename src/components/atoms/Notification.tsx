@@ -36,7 +36,7 @@ export const Notification = ({
   return (
     <Snackbar
       open={open}
-      autoHideDuration={ms(timeToClose ?? '6s')}
+      autoHideDuration={ms(timeToClose ?? '2s')}
       onClose={handleClose}
       sx={{
         width: 400,

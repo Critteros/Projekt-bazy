@@ -1,26 +1,32 @@
-import { Avatar } from '@mui/material';
-import { useMemo, memo } from 'react';
+import { Avatar, Skeleton } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { stringToColor } from '@/utils/stringToColor';
 
 type ColorAvatarProps = {
   value: string;
 };
 
-export const ColorAvatar = memo(function ColorAvatar({ value }: ColorAvatarProps) {
-  const bgcolor = useMemo(() => {
-    const hash = [...value].reduce((acc, char) => {
-      return char.charCodeAt(0) + ((acc << 5) - acc);
-    }, 0);
-    return `hsl(${hash % 360}, 95%, 35%)`;
+export const ColorAvatar = ({ value }: ColorAvatarProps) => {
+  const [colorValue, setColorValue] = useState<string | null>(null);
+
+  useEffect(() => {
+    void (async () => {
+      setColorValue(await stringToColor(value));
+    })();
   }, [value]);
+
+  if (colorValue === null) {
+    return <Skeleton variant={'circular'} width={40} height={40} />;
+  }
 
   return (
     <Avatar
       sx={{
-        bgcolor,
+        bgcolor: colorValue,
         color: 'white',
       }}
     >
       {value[0]}
     </Avatar>
   );
-});
+};

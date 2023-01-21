@@ -40,7 +40,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER assign_customer_role
-    AFTER INSERT OR UPDATE
+    AFTER INSERT
     ON customer
     FOR EACH ROW
 EXECUTE PROCEDURE assign_customer_role();

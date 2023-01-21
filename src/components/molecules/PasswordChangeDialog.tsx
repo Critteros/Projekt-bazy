@@ -88,7 +88,7 @@ export const PasswordChangeDialog = (props: PasswordChangeDialogProps) => {
       }}
     >
       <DialogTitle>
-        <Typography> Change password</Typography>
+        <Typography>Change password</Typography>
         {onClose ? (
           <IconButton
             aria-label="close"

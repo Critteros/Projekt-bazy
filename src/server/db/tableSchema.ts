@@ -62,11 +62,27 @@ export const AccountSchema = z.object({
 export type Account = z.infer<typeof AccountSchema>;
 
 export const StaffSchema = z.object({
-  staff_id: z.number(),
-  firstname: z.string(),
-  lastname: z.string(),
-  account_id: z.number(),
-  job_title: z.string(),
+  staff_id: z.number({
+    required_error: 'Staff id must be a number',
+  }),
+  firstname: z
+    .string({
+      required_error: 'Firstname must be a string',
+    })
+    .min(1, 'Firstname cannot be an empty string'),
+  lastname: z
+    .string({
+      required_error: 'Lastname must be a string',
+    })
+    .min(1, 'Lastname cannot be an empty string'),
+  account_id: z.number({
+    required_error: 'Account id must be a number',
+  }),
+  job_title: z
+    .string({
+      required_error: 'Job Title must be a string',
+    })
+    .min(1, 'Job Title cannot be an empty string'),
 });
 export type Staff = z.infer<typeof StaffSchema>;
 
