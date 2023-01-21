@@ -1,4 +1,4 @@
-import { protectedProcedure } from '@/server/api/trpc';
+import { protectedProcedure, roleProtectedProcedure } from '@/server/api/trpc';
 import { ChangePasswordRequestSchema } from '@/dto/account';
 import { Account } from '@/server/models/Account';
 
@@ -12,3 +12,8 @@ export const changePassword = protectedProcedure
       login: ctx.session!.login,
     });
   });
+
+export const listAccounts = roleProtectedProcedure(['admin']).query(async ({ ctx }) => {
+  const model = new Account(ctx.db);
+  return model.listAccounts();
+});

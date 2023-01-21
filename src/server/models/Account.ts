@@ -1,10 +1,12 @@
 import type { Pool } from 'pg';
+import { z } from 'zod';
 import bcrypt from 'bcrypt';
 
 import type { Account as AccountTable } from '@/server/db/tableSchema';
 import type { AccountInfo } from '@/server/db/session';
 import type { ChangePasswordRequest } from '@/dto/account';
 import { TRPCError } from '@trpc/server';
+import { AccountSchema } from '@/server/db/tableSchema';
 
 export class Account {
   constructor(private dbPool: Pool) {}
@@ -122,5 +124,19 @@ export class Account {
         message: 'Unsuccessful UPDATE query',
       });
     }
+  }
+
+  public async listAccounts() {
+    const query = await this.dbPool.query({
+      name: 'list-accounts',
+      text: 'SELECT login, account_id FROM account',
+    });
+    return z
+      .array(
+        AccountSchema.omit({
+          password: true,
+        }),
+      )
+      .parse(query.rows);
   }
 }
