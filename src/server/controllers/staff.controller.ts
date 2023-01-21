@@ -2,7 +2,7 @@ import { roleProtectedProcedure } from '@/server/api/trpc';
 import { TRPCError } from '@trpc/server';
 import { StaffProfileInfoResponseSchema } from '@/dto/staff';
 
-export const getStaffProfileInfo = roleProtectedProcedure(['staff']).query(async ({ ctx }) => {
+export const getStaffProfileInfo = roleProtectedProcedure(['staff']).query(({ ctx }) => {
   const staffProfile = ctx.session!.staff_profile;
   if (!staffProfile) {
     throw new TRPCError({

@@ -1,12 +1,11 @@
 import type { Pool } from 'pg';
-import { z } from 'zod';
+import { TRPCError } from '@trpc/server';
 import bcrypt from 'bcrypt';
 
 import type { Account as AccountTable } from '@/server/db/tableSchema';
 import type { AccountInfo } from '@/server/db/session';
 import type { ChangePasswordRequest } from '@/dto/account';
-import { TRPCError } from '@trpc/server';
-import { AccountSchema } from '@/server/db/tableSchema';
+import { ListAccountsResponseSchema } from '@/dto/account';
 
 export class Account {
   constructor(private dbPool: Pool) {}
@@ -83,40 +82,83 @@ export class Account {
     oldPassword,
     newPassword,
     login,
-  }: ChangePasswordRequest & { login: AccountTable['login'] }) {
-    // 1) Query old password from the database
-    type RowType = Pick<AccountTable, 'password'>;
-    const queryResult = await this.dbPool.query<RowType>({
-      name: `query-user-password`,
-      text: 'SELECT password FROM account WHERE login=$1',
-      values: [login],
-    });
-
-    const returnedInfo = queryResult.rows[0];
-    if (!returnedInfo) {
+    accountId,
+    adminChange,
+  }: Omit<ChangePasswordRequest, 'oldPassword'> & {
+    login?: AccountTable['login'];
+    accountId?: AccountTable['account_id'];
+    oldPassword?: ChangePasswordRequest['oldPassword'];
+    adminChange?: boolean;
+  }) {
+    if (oldPassword === undefined && !adminChange) {
       throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message: 'User does not exists in a database',
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Attempt to change the password without admin right',
       });
     }
 
-    // Test if old password matches
-    if (!(await bcrypt.compare(oldPassword, returnedInfo.password))) {
+    if (login === undefined && accountId === undefined) {
       throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message: 'Old password does not match',
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Not target was specified for password change operation',
       });
+    }
+
+    if (!adminChange) {
+      // 1) Query old password from the database
+      type RowType = Pick<AccountTable, 'password'>;
+
+      let queryResult;
+
+      if (accountId) {
+        queryResult = await this.dbPool.query<RowType>({
+          name: `query-user-password-using-accountId`,
+          text: 'SELECT password FROM account WHERE account_id=$1',
+          values: [accountId],
+        });
+      } else {
+        queryResult = await this.dbPool.query<RowType>({
+          name: `query-user-password-using-login`,
+          text: 'SELECT password FROM account WHERE login=$1',
+          values: [login],
+        });
+      }
+
+      const returnedInfo = queryResult.rows[0];
+      if (!returnedInfo) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'User does not exists in a database',
+        });
+      }
+
+      // Test if old password matches
+      if (!(await bcrypt.compare(oldPassword!, returnedInfo.password))) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Old password does not match',
+        });
+      }
     }
 
     // Encrypt new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     // Update db
-    const result = await this.dbPool.query({
-      name: 'update-password',
-      text: 'UPDATE account SET password=$1 WHERE login=$2',
-      values: [hashedPassword, login],
-    });
+    let result;
+    if (accountId) {
+      result = await this.dbPool.query({
+        name: 'update-password-using-accountId',
+        text: 'UPDATE account SET password=$1 WHERE account_id=$2',
+        values: [hashedPassword, accountId],
+      });
+    } else {
+      result = await this.dbPool.query({
+        name: 'update-password-using-login',
+        text: 'UPDATE account SET password=$1 WHERE login=$2',
+        values: [hashedPassword, login],
+      });
+    }
 
     if (result.rowCount !== 1) {
       throw new TRPCError({
@@ -129,14 +171,13 @@ export class Account {
   public async listAccounts() {
     const query = await this.dbPool.query({
       name: 'list-accounts',
-      text: 'SELECT login, account_id FROM account',
+      text: ` SELECT 
+                    (SELECT account_id FROM account a WHERE a.login=v.login) as account_id,
+                    v.login,
+                    v.roles,
+                    row_to_json(v.customer_profile) AS customer_profile,
+                    row_to_json(v.staff_profile) AS staff_profile FROM user_info_view v;`,
     });
-    return z
-      .array(
-        AccountSchema.omit({
-          password: true,
-        }),
-      )
-      .parse(query.rows);
+    return ListAccountsResponseSchema.parse(query.rows);
   }
 }
