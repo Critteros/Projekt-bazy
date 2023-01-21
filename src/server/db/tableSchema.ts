@@ -17,13 +17,40 @@ export const AccountRoleRelationSchema = z.object({
 export type AccountRoleRelation = z.infer<typeof AccountRoleRelationSchema>;
 
 export const CustomerSchema = z.object({
-  customer_id: z.number(),
-  firstname: z.string(),
-  lastname: z.string(),
-  age: z.number(),
+  customer_id: z.number({
+    required_error: 'Customer id must be a number',
+  }),
+  firstname: z
+    .string({
+      required_error: 'Firstname must be a string',
+    })
+    .min(1, 'Firstname cannot be an empty string'),
+  lastname: z
+    .string({
+      required_error: 'Lastname must be a string',
+    })
+    .min(1)
+    .min(1, 'Lastname cannot be an empty string'),
+  age: z
+    .number({
+      required_error: 'Age must be a number',
+    })
+    .min(1, 'Age cannot be lowe then 1')
+    .max(120, 'Age cannot be higher then 20'),
   gender: GenderSchema,
-  contact_number: z.string(),
-  account_id: z.number().nullable(),
+  contact_number: z
+    .string({
+      required_error: 'Contact number must be a string',
+    })
+    .regex(
+      /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/,
+      'Invalid phone number!',
+    ),
+  account_id: z
+    .number({
+      required_error: 'Account id must be a number',
+    })
+    .nullable(),
 });
 export type Customer = z.infer<typeof CustomerSchema>;
 
@@ -35,11 +62,27 @@ export const AccountSchema = z.object({
 export type Account = z.infer<typeof AccountSchema>;
 
 export const StaffSchema = z.object({
-  staff_id: z.number(),
-  firstname: z.string(),
-  lastname: z.string(),
-  account_id: z.number(),
-  job_title: z.string(),
+  staff_id: z.number({
+    required_error: 'Staff id must be a number',
+  }),
+  firstname: z
+    .string({
+      required_error: 'Firstname must be a string',
+    })
+    .min(1, 'Firstname cannot be an empty string'),
+  lastname: z
+    .string({
+      required_error: 'Lastname must be a string',
+    })
+    .min(1, 'Lastname cannot be an empty string'),
+  account_id: z.number({
+    required_error: 'Account id must be a number',
+  }),
+  job_title: z
+    .string({
+      required_error: 'Job Title must be a string',
+    })
+    .min(1, 'Job Title cannot be an empty string'),
 });
 export type Staff = z.infer<typeof StaffSchema>;
 

@@ -25,7 +25,7 @@ export const AdminLayout = ({ children }: AdminLayoutProps) => {
         }}
       >
         <AdminDrawer />
-        {children}
+        <Box sx={{ display: 'flex', flexGrow: 1, position: 'relative' }}>{children}</Box>
       </Box>
     </PageWrapper>
   );

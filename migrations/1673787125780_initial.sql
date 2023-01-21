@@ -31,7 +31,7 @@ CREATE TABLE "customer"
     "age"            INTEGER      NOT NULL,
     "gender"         gender,
     "contact_number" VARCHAR(255) NOT NULL,
-    "account_id"     INTEGER      NULL
+    "account_id"     INTEGER      NULL UNIQUE
 );
 CREATE INDEX "customer_lastname_index" ON
     "customer" USING hash ("lastname");
@@ -65,7 +65,7 @@ CREATE TABLE "staff"
     "staff_id"   SERIAL PRIMARY KEY,
     "firstname"  VARCHAR(255) NOT NULL,
     "lastname"   VARCHAR(255) NOT NULL,
-    "account_id" INTEGER      NOT NULL,
+    "account_id" INTEGER      NOT NULL UNIQUE,
     "job_title"  VARCHAR(255) NOT NULL
 );
 CREATE INDEX "staff_firstname_index" ON

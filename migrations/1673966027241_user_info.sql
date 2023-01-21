@@ -26,8 +26,6 @@ BEGIN
              JOIN account_roles USING (role_id)
     WHERE account_id = account_record.account_id;
 
-    RAISE WARNING 'Roles -> %', roles;
-
     IF roles IS NULL THEN
         roles := array []::text[];
     END IF;

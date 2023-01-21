@@ -1,6 +1,9 @@
 import { Drawer, List, ListSubheader } from '@mui/material';
+
 import { AdminTables } from '@/components/organisms/AdminTables';
 import { DrawerContent } from '@/components/atoms/DrawerContent';
+import { AdminAccounts } from '@/components/organisms/AdminAccounts';
+import { AdminStaff } from '@/components/organisms/AdminStaff';
 
 export const AdminDrawer = () => {
   return (
@@ -27,6 +30,8 @@ export const AdminDrawer = () => {
             </ListSubheader>
           }
         >
+          <AdminAccounts />
+          <AdminStaff />
           <AdminTables />
         </List>
       </DrawerContent>

@@ -55,6 +55,7 @@ export const LoginForm = forwardRef<LoginFormRef | undefined, LoginFormProps>(fu
         onChange={formik.handleChange}
         error={formik.touched.login && !!formik.errors.login}
         helperText={formik.touched.login && formik.errors.login}
+        color={'secondary'}
       />
       <TextField
         margin="normal"
@@ -69,8 +70,9 @@ export const LoginForm = forwardRef<LoginFormRef | undefined, LoginFormProps>(fu
         onChange={formik.handleChange}
         error={formik.touched.password && !!formik.errors.password}
         helperText={formik.touched.password && formik.errors.password}
+        color={'secondary'}
       />
-      <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+      <Button type="submit" fullWidth variant="contained" color={'secondary'} sx={{ mt: 3, mb: 2 }}>
         <Typography>Login</Typography>
       </Button>
     </Box>

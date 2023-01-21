@@ -19,6 +19,7 @@ export const SimpleLayout = ({ children }: SimpleLayoutProps) => {
           justifyContent: 'center',
           alignItems: 'center',
           flexDirection: 'column',
+          position: 'relative',
         }}
       >
         {children}
