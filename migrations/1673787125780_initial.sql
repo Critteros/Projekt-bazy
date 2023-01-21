@@ -79,8 +79,7 @@ CREATE TABLE "transaction"
     "date"           DATE    NOT NULL,
     "payment_id"     INTEGER NOT NULL,
     "customer_id"    INTEGER NOT NULL,
-    "crew_id"        INTEGER NOT NULL,
-    "reservation_id" INTEGER NOT NULL
+    "crew_id"        INTEGER NOT NULL
 );
 CREATE INDEX "transaction_date_index" ON
     "transaction" USING btree ("date");
@@ -98,7 +97,8 @@ CREATE TABLE "reservation"
     "date_in"          DATE    NOT NULL,
     "date_out"         DATE    NOT NULL,
     "reservation_cost" INTEGER NOT NULL,
-    "room_number"      INTEGER NULL
+    "room_number"      INTEGER NULL,
+    "transaction_id"   INTEGER NOT NULL
 );
 
 CREATE TABLE "reservation_room_type_relation"
@@ -112,13 +112,13 @@ CREATE TABLE "reservation_room_type_relation"
 
 ALTER TABLE
     "reservation"
-    ADD CONSTRAINT "reservation_room_number_foreign" FOREIGN KEY ("room_number") REFERENCES "rooms" ("room_number");
+    ADD CONSTRAINT "reservation_room_number_foreign" FOREIGN KEY ("room_number") REFERENCES "rooms" ("room_number"),
+    ADD CONSTRAINT "reservation_transaction_id_foreign" FOREIGN KEY ("transaction_id") REFERENCES "transaction" ("transaction_id");
 
 ALTER TABLE
     "transaction"
     ADD CONSTRAINT "transaction_customer_id_foreign" FOREIGN KEY ("customer_id") REFERENCES "customer" ("customer_id"),
     ADD CONSTRAINT "transaction_payment_id_foreign" FOREIGN KEY ("payment_id") REFERENCES "payments" ("payment_id"),
-    ADD CONSTRAINT "transaction_reservation_id_foreign" FOREIGN KEY ("reservation_id") REFERENCES "reservation" ("reservation_id"),
     ADD CONSTRAINT "transaction_crew_id_foreign" FOREIGN KEY ("crew_id") REFERENCES "staff" ("staff_id");
 
 ALTER TABLE
