@@ -13,6 +13,7 @@ import type { schemaMap } from '@/server/db/tableMap';
 import { CornerButton } from '@/components/atoms/CornerButton';
 import { AppLink } from '@/components/atoms/AppLink';
 import { IconWrapper } from '@/components/atoms/IconWrapper';
+import { AppButton } from '@/components/atoms/AppButton';
 
 type TableEditorProps = {
   tableName: keyof typeof schemaMap;
@@ -108,7 +109,7 @@ const TableEditor: NextPageWithLayout<TableEditorProps> = ({ tableName }) => {
             }) ?? []
           }
           getRowId={(row) => Object.values(row).join('_')}
-          components={{ Toolbar: GridToolbar }}
+          components={{ Toolbar: GridToolbar, BaseButton: AppButton }}
           disableSelectionOnClick
           loading={isLoading}
         />

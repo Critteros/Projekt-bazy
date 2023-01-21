@@ -20,6 +20,7 @@ import { CornerButton } from '@/components/atoms/CornerButton';
 import { IconWrapper } from '@/components/atoms/IconWrapper';
 import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
 import { AppLink } from '@/components/atoms/AppLink';
+import { AppButton } from '@/components/atoms/AppButton';
 
 export const getServerSideProps: GetServerSideProps = withRoleProtection('admin');
 
@@ -142,6 +143,7 @@ const AdminAccounts: NextPageWithLayout = () => {
         }}
         components={{
           Toolbar: GridToolbar,
+          BaseButton: AppButton,
         }}
       />
     </Stack>
