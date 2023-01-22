@@ -160,3 +160,30 @@ export const UserInfoViewSchema = z.object({
   staff_profile: StaffSchema.nullable(),
 });
 export type UserInfoView = z.infer<typeof UserInfoViewSchema>;
+
+export const HotelRoomViewSchema = RoomsSchema.extend({
+  room_standards: z.array(RoomTypeSchema.shape.friendly_name),
+});
+export type HotelRoomView = z.infer<typeof HotelRoomViewSchema>;
+
+export const ReservationInfoViewSchema = ReservationSchema.extend({
+  ongoing: z.boolean(),
+  room_standards: z.array(RoomTypeSchema.shape.friendly_name),
+});
+export type ReservationInfoView = z.infer<typeof ReservationInfoViewSchema>;
+
+export const TransactionDetailsViewSchema = TransactionSchema.pick({
+  transaction_id: true,
+  payment_id: true,
+})
+  .extend({
+    transaction_date: TransactionSchema.shape.date,
+    customer: CustomerSchema,
+    staff: StaffSchema,
+  })
+  .extend(
+    PaymentsSchema.omit({
+      payment_id: true,
+    }).shape,
+  );
+export type TransactionDetailsView = z.infer<typeof TransactionDetailsViewSchema>;
