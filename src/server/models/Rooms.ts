@@ -1,7 +1,7 @@
 import type { Pool } from 'pg';
-import { RoomGetStandardsResponse, RoomGetStandardsResponseSchema } from '@/dto/rooms';
-import { RoomType } from '@/server/db/tableSchema';
-import { ArrayElement } from '@/utils/types';
+import { type RoomGetStandardsResponse, RoomGetStandardsResponseSchema } from '@/dto/rooms';
+import type { RoomType } from '@/server/db/tableSchema';
+import type { ArrayElement } from '@/utils/types';
 
 export class Rooms {
   constructor(private dbPool: Pool) {}

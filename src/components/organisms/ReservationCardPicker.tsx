@@ -2,7 +2,6 @@ import { Stack } from '@mui/material';
 
 import { AddNewReservationCard } from '@/components/molecules/AddNewReservationCard';
 
-import { useEffect } from 'react';
 import { useReservationContext } from '@/hooks/useReservationContext';
 import { ReservationCard } from '@/components/molecules/ReservationCard';
 

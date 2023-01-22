@@ -1,4 +1,4 @@
-import { ReservationContext, ReservationType } from '@/context/ReservationContext';
+import { ReservationContext, type ReservationType } from '@/context/ReservationContext';
 import { useCallback, useContext } from 'react';
 
 export const useReservationContext = () => {
@@ -24,9 +24,14 @@ export const useReservationContext = () => {
     [setState],
   );
 
+  const reset = useCallback(() => {
+    setState([]);
+  }, [setState]);
+
   return {
     reservations: state,
     append,
     remove,
+    reset,
   };
 };

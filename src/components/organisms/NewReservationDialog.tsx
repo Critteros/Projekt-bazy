@@ -25,6 +25,7 @@ import { useFormik } from 'formik';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import type { z } from 'zod';
 import { useReservationContext } from '@/hooks/useReservationContext';
+import dayjs from 'dayjs';
 
 const validationSchema = NewTransactionRequestSchema.shape.reservations.element;
 
@@ -51,13 +52,15 @@ export const NewReservationDialog = ({ open, onClose }: NewReservationDialogProp
     } satisfies z.infer<typeof validationSchema>,
     onSubmit: (data) => {
       append(data);
+      formik.resetForm();
       onClose();
     },
   });
 
   useEffect(() => {
     void formik.setFieldValue('standards', selectedStandards);
-  }, [selectedStandards]);
+    // eslint-disable-next-line
+  }, [selectedStandards, formik.setFieldValue]);
 
   const handleStandardsChange = (event: SelectChangeEvent<typeof selectedStandards>) => {
     const {
@@ -90,7 +93,7 @@ export const NewReservationDialog = ({ open, onClose }: NewReservationDialogProp
                 inputFormat="DD/MM/YYYY"
                 value={formik.values.dateIn}
                 onChange={(data) => {
-                  void formik.setFieldValue('dateIn', data);
+                  void formik.setFieldValue('dateIn', dayjs(data).toDate());
                 }}
                 PaperProps={{
                   variant: 'outlined',
@@ -105,7 +108,7 @@ export const NewReservationDialog = ({ open, onClose }: NewReservationDialogProp
                 inputFormat="DD/MM/YYYY"
                 value={formik.values.dateOut}
                 onChange={(data) => {
-                  void formik.setFieldValue('dateOut', data);
+                  void formik.setFieldValue('dateOut', dayjs(data).toDate());
                 }}
                 PaperProps={{
                   variant: 'outlined',

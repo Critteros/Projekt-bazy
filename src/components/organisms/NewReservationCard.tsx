@@ -1,5 +1,5 @@
 import { CreditCard as CreditCardIcon } from '@mui/icons-material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   DialogContent,
   DialogTitle,
@@ -25,10 +25,25 @@ import { useReservationContext } from '@/hooks/useReservationContext';
 
 export const NewReservationCard = () => {
   const [open, setOpen] = useState(false);
-  const { session, hasRole } = useSession();
-  const { reservations } = useReservationContext();
+  const [errorDialog, setErrorDialog] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const { hasRole } = useSession();
+  const { reservations, reset } = useReservationContext();
   const { data: customerLogins } = api.customer.listCustomers.useQuery(undefined, {
     enabled: hasRole('staff'),
+  });
+
+  const { mutate } = api.transactions.createTransaction.useMutation({
+    onSuccess: () => {
+      formik.resetForm();
+      reset();
+      setOpen(false);
+    },
+    onError: (error) => {
+      setErrorMessage(error.message);
+      setErrorDialog(true);
+    },
   });
 
   const formik = useFormik({
@@ -38,9 +53,19 @@ export const NewReservationCard = () => {
       reservations,
       paymentMethod: '',
     } satisfies NewTransactionRequest,
-    onSubmit: () => alert('submitted!'),
-    enableReinitialize: true,
+    onSubmit: ({ reservations, paymentMethod, customer }) => {
+      mutate({
+        customer,
+        paymentMethod,
+        reservations,
+      });
+    },
   });
+
+  useEffect(() => {
+    void formik.setFieldValue('reservations', reservations);
+    // eslint-disable-next-line
+  }, [formik.setFieldValue, reservations]);
 
   return (
     <>
@@ -119,6 +144,13 @@ export const NewReservationCard = () => {
             </Button>
           </Box>
         </DialogContent>
+        <AppDialog open={errorDialog} onClose={() => setErrorDialog(false)}>
+          <DialogTitle>
+            <Typography sx={{ color: 'red' }}>Error</Typography>
+            <DialogCloseButton onClose={() => setErrorDialog(false)} />
+          </DialogTitle>
+          <DialogContent>{errorMessage}</DialogContent>
+        </AppDialog>
       </AppDialog>
     </>
   );
