@@ -1,19 +1,12 @@
 import { Stack } from '@mui/material';
-import { ReservationCardContainer } from '@/components/atoms/ReservationCardContainer';
+
 import { AddNewReservationCard } from '@/components/molecules/AddNewReservationCard';
-import type { ArrayElement } from '@/utils/types';
-import type { NewTransactionRequest } from '@/dto/transaction';
-import { useState } from 'react';
+
+import { useEffect } from 'react';
 import { useReservationContext } from '@/hooks/useReservationContext';
 import { ReservationCard } from '@/components/molecules/ReservationCard';
 
-type Reservation = ArrayElement<NewTransactionRequest['reservations']>;
-
-export type ReservationCardPickerProps = {
-  onChange?: (reservations: Reservation[]) => void;
-};
-
-export const ReservationCardPicker = ({ onChange }: ReservationCardPickerProps) => {
+export const ReservationCardPicker = () => {
   const { reservations } = useReservationContext();
 
   return (

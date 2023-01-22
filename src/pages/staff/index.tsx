@@ -8,6 +8,8 @@ import { StaffLayout } from '@/components/templates/StaffLayout';
 import { CardContainer } from '@/components/atoms/CardContainer';
 import { NewReservationCard } from '@/components/organisms/NewReservationCard';
 
+import { ReservationContextProvider } from '@/context/ReservationContext';
+
 export const getServerSideProps: GetServerSideProps = withRoleProtection('staff');
 
 const StaffPage: NextPageWithLayout = () => {
@@ -28,7 +30,9 @@ const StaffPage: NextPageWithLayout = () => {
       }}
     >
       <CardContainer>
-        <NewReservationCard />
+        <ReservationContextProvider>
+          <NewReservationCard />
+        </ReservationContextProvider>
       </CardContainer>
     </Box>
   );

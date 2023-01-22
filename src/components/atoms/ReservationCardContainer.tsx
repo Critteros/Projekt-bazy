@@ -10,6 +10,7 @@ export const ReservationCardContainer = ({ sx, children, ...paperProps }: PaperP
         alignItems: 'center',
         justifyContent: 'center',
         position: 'relative',
+        padding: 3,
         ...sx,
       }}
       {...paperProps}
