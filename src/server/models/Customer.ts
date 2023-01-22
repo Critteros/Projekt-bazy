@@ -2,6 +2,7 @@ import type { Pool } from 'pg';
 
 import type { CustomerUpdateProfileRequest } from '@/dto/customer';
 import { TRPCError } from '@trpc/server';
+import { ListCustomersResponseSchema } from '@/dto/customer';
 
 export class Customer {
   constructor(private dbPool: Pool) {}
@@ -47,5 +48,13 @@ export class Customer {
         message: 'Could not create customer profile',
       });
     }
+  }
+
+  public async listCustomers() {
+    const query = await this.dbPool.query<{ login: string }>({
+      name: 'customer-query-customers',
+      text: `SELECT login FROM user_info_view v WHERE customer_profile IS NOT NULL`,
+    });
+    return await ListCustomersResponseSchema.parseAsync(query.rows.map((el) => el.login));
   }
 }

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CustomerSchema } from '@/server/db/tableSchema';
+import { CustomerSchema, UserInfoViewSchema } from '@/server/db/tableSchema';
 
 export const CustomerProfileInfoResponseSchema = CustomerSchema.omit({
   customer_id: true,
@@ -16,3 +16,6 @@ export const CustomerUpdateProfileRequestSchema = z.object({
   contactNumber: CustomerSchema.shape.contact_number,
 });
 export type CustomerUpdateProfileRequest = z.infer<typeof CustomerUpdateProfileRequestSchema>;
+
+export const ListCustomersResponseSchema = z.array(UserInfoViewSchema.shape.login);
+export type ListCustomersResponse = z.infer<typeof ListCustomersResponseSchema>;

@@ -40,3 +40,8 @@ export const createCustomerProfile = protectedProcedure
     const model = new Customer(ctx.db);
     await model.createProfile(ctx.session!.login, input);
   });
+
+export const listCustomers = roleProtectedProcedure(['staff', 'admin']).query(async ({ ctx }) => {
+  const model = new Customer(ctx.db);
+  return await model.listCustomers();
+});

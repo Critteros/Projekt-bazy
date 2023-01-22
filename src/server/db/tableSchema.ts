@@ -55,9 +55,15 @@ export const CustomerSchema = z.object({
 export type Customer = z.infer<typeof CustomerSchema>;
 
 export const AccountSchema = z.object({
-  account_id: z.number(),
-  login: z.string(),
-  password: z.string(),
+  account_id: z.number({
+    required_error: 'Account id must be a number',
+  }),
+  login: z.string({
+    required_error: 'Login must be a string',
+  }),
+  password: z.string({
+    required_error: 'Password must be a string',
+  }),
 });
 export type Account = z.infer<typeof AccountSchema>;
 
@@ -97,18 +103,36 @@ export const TransactionSchema = z.object({
 export type Transaction = z.infer<typeof TransactionSchema>;
 
 export const ReservationSchema = z.object({
-  reservation_id: z.number(),
-  date_in: z.date(),
-  date_out: z.date(),
-  reservation_cost: z.number(),
+  reservation_id: z.number({
+    required_error: 'Reservation id must be a number',
+  }),
+  date_in: z.date({
+    required_error: 'Date In must be a date',
+  }),
+  date_out: z.date({
+    required_error: 'Date out must be a date',
+  }),
+  reservation_cost: z
+    .number({
+      required_error: 'Reservation cost must be a number',
+    })
+    .min(0, 'Reservation cost cannot be negative'),
   room_number: z.number().nullable(),
 });
 export type Reservation = z.infer<typeof ReservationSchema>;
 
 export const PaymentsSchema = z.object({
-  payment_id: z.number(),
-  method: z.string(),
-  total_amount: z.number(),
+  payment_id: z.number({
+    required_error: 'Payment id must be a number',
+  }),
+  method: z
+    .string({
+      required_error: 'Payment method must be a string',
+    })
+    .min(1, 'Payment method cannot be empty'),
+  total_amount: z.number({
+    required_error: 'Total amount must be a number',
+  }),
 });
 export type Payments = z.infer<typeof PaymentsSchema>;
 
@@ -162,7 +186,9 @@ export const UserInfoViewSchema = z.object({
 export type UserInfoView = z.infer<typeof UserInfoViewSchema>;
 
 export const HotelRoomViewSchema = RoomsSchema.extend({
-  room_standards: z.array(RoomTypeSchema.shape.friendly_name),
+  room_standards: z.array(RoomTypeSchema.shape.friendly_name, {
+    required_error: 'Room Standards must be an array',
+  }),
 });
 export type HotelRoomView = z.infer<typeof HotelRoomViewSchema>;
 

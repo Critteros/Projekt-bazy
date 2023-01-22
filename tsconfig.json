@@ -24,7 +24,8 @@
       "@/style/*": ["src/style/*"],
       "@/dto/*": ["src/dto/*"],
       "@/hooks/*": ["src/hooks/*"],
-      "@/middlewares/*": ["src/middlewares/*"]
+      "@/middlewares/*": ["src/middlewares/*"],
+      "@/context/*": ["src/context/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"],

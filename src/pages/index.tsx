@@ -6,7 +6,7 @@ import { api } from '@/utils/api';
 import type { NextPageWithLayout } from './_app';
 import { CardContainer } from '@/components/atoms/CardContainer';
 import { MyReservationsCard } from '@/components/atoms/MyReservationsCard';
-import { CreateReservationCard } from '@/components/atoms/CreateReservationCard';
+import { StaffDashboardCard } from '@/components/atoms/StaffDashboardCard';
 import { ProfileCard } from '@/components/atoms/ProfileCard';
 import { SimpleLayout } from '@/components/templates/SimpleLayout';
 
@@ -28,7 +28,7 @@ const Home: NextPageWithLayout = () => {
         <ProfileCard />
         <AdminPanelCard />
         <MyReservationsCard />
-        <CreateReservationCard />
+        <StaffDashboardCard />
       </CardContainer>
     </Container>
   );
