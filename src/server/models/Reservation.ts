@@ -1,6 +1,7 @@
 import type { Pool, PoolClient } from 'pg';
 
 import type {
+  Account,
   HotelRoomView,
   Reservation as ReservationType,
   ReservationInfoView,
@@ -11,11 +12,14 @@ import {
   type ReservationAssignRoomRequest,
   type ReservationAvailableRoomsResponse,
   type ReservationCurrentlyActiveResponse,
+  type ReservationsCurrentAccountReservationsResponse,
   ReservationAvailableRoomsResponseSchema,
   ReservationCurrentlyActiveResponseSchema,
   ReservationsWithoutRoomResponseSchema,
+  ReservationsCurrentAccountReservationsResponseSchema,
 } from '@/dto/reservations';
 import type { ArrayElement } from '@/utils/types';
+import type { GetAccountReservations } from '@/server/db/tableSchema';
 
 export class Reservation {
   constructor(private dbPool: Pool) {}
@@ -179,6 +183,37 @@ export class Reservation {
             dateIn: date_in,
             roomNumber: room_number,
           } satisfies ArrayElement<ReservationCurrentlyActiveResponse>),
+      ),
+    );
+  }
+
+  public async getReservationsForUser({ login }: { login: Account['login'] }) {
+    const query = await this.dbPool.query<GetAccountReservations>({
+      name: 'reservations-get-reservations-for-user',
+      text: `SELECT * FROM get_account_reservations($1)`,
+      values: [login],
+    });
+
+    return await ReservationsCurrentAccountReservationsResponseSchema.parseAsync(
+      query.rows.map(
+        ({
+          room_standards,
+          room_number,
+          reservation_standards,
+          date_in,
+          date_out,
+          ongoing,
+          cost,
+        }) =>
+          ({
+            roomNumber: room_number,
+            dateIn: date_in,
+            dateOut: date_out,
+            cost: Math.round(cost / 100),
+            reservationStandards: reservation_standards,
+            ongoing,
+            roomStandards: room_standards,
+          } satisfies ArrayElement<ReservationsCurrentAccountReservationsResponse>),
       ),
     );
   }

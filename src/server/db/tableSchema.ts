@@ -213,3 +213,14 @@ export const TransactionDetailsViewSchema = TransactionSchema.pick({
     }).shape,
   );
 export type TransactionDetailsView = z.infer<typeof TransactionDetailsViewSchema>;
+
+export const GetAccountReservationsSchema = z.object({
+  ongoing: z.boolean(),
+  date_in: z.date(),
+  date_out: z.date(),
+  cost: z.number(),
+  room_number: z.number().nullable(),
+  reservation_standards: z.array(z.string()),
+  room_standards: z.array(z.string()),
+});
+export type GetAccountReservations = z.infer<typeof GetAccountReservationsSchema>;

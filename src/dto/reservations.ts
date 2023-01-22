@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import {
+  GetAccountReservationsSchema,
   HotelRoomViewSchema,
   ReservationInfoViewSchema,
   ReservationSchema,
@@ -51,4 +52,19 @@ export const ReservationCurrentlyActiveResponseSchema = z.array(
 );
 export type ReservationCurrentlyActiveResponse = z.infer<
   typeof ReservationCurrentlyActiveResponseSchema
+>;
+
+export const ReservationsCurrentAccountReservationsResponseSchema = z.array(
+  z.object({
+    ongoing: GetAccountReservationsSchema.shape.ongoing,
+    dateIn: GetAccountReservationsSchema.shape.date_in,
+    dateOut: GetAccountReservationsSchema.shape.date_out,
+    cost: GetAccountReservationsSchema.shape.cost,
+    roomNumber: GetAccountReservationsSchema.shape.room_number,
+    reservationStandards: GetAccountReservationsSchema.shape.reservation_standards,
+    roomStandards: GetAccountReservationsSchema.shape.room_standards,
+  }),
+);
+export type ReservationsCurrentAccountReservationsResponse = z.infer<
+  typeof ReservationsCurrentAccountReservationsResponseSchema
 >;

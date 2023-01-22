@@ -4,6 +4,7 @@ import {
   getAvailableRoomsForReservation,
   assignRoomToReservation,
   currentlyActiveReservations,
+  currentReservations,
 } from '@/server/controllers/reservations.controller';
 
 export const reservationsRouter = createTRPCRouter({
@@ -11,4 +12,5 @@ export const reservationsRouter = createTRPCRouter({
   getAvailableRoomsForReservation,
   assignRoomToReservation,
   currentlyActiveReservations,
+  currentReservations,
 });

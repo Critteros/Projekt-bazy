@@ -30,3 +30,9 @@ export const currentlyActiveReservations = roleProtectedProcedure(['staff', 'adm
     return await new Reservation(ctx.db).queryCurrentlyActiveReservations();
   },
 );
+
+export const currentReservations = roleProtectedProcedure(['customer']).query(async ({ ctx }) => {
+  return await new Reservation(ctx.db).getReservationsForUser({
+    login: ctx.session!.login,
+  });
+});
