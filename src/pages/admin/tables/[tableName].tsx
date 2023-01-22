@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import type { GetServerSideProps } from 'next';
 import { Box } from '@mui/material';
 import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
@@ -119,7 +120,14 @@ const TableEditor: NextPageWithLayout<TableEditorProps> = ({ tableName }) => {
 };
 
 TableEditor.getLayout = (page) => {
-  return <AdminLayout>{page}</AdminLayout>;
+  return (
+    <AdminLayout>
+      <Head>
+        <title>View tables</title>
+      </Head>
+      {page}
+    </AdminLayout>
+  );
 };
 
 export default TableEditor;

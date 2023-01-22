@@ -1,9 +1,8 @@
 import { Container, Stack, Typography } from '@mui/material';
 import { Login as LoginIcon, VpnKey as RegisterIcon } from '@mui/icons-material';
+import Head from 'next/head';
 
 import { AdminPanelCard } from '@/components/atoms/AdminPanelCard';
-
-import type { NextPageWithLayout } from './_app';
 import { CardContainer } from '@/components/atoms/CardContainer';
 import { MyReservationsCard } from '@/components/atoms/MyReservationsCard';
 import { StaffDashboardCard } from '@/components/atoms/StaffDashboardCard';
@@ -12,6 +11,8 @@ import { SimpleLayout } from '@/components/templates/SimpleLayout';
 import { useSession } from '@/hooks/useSession';
 import { AppButton } from '@/components/atoms/AppButton';
 import { AppLink } from '@/components/atoms/AppLink';
+
+import type { NextPageWithLayout } from './_app';
 
 const Home: NextPageWithLayout = () => {
   const { isAuthenticated } = useSession();
@@ -82,7 +83,14 @@ const Home: NextPageWithLayout = () => {
 };
 
 Home.getLayout = (page) => {
-  return <SimpleLayout>{page}</SimpleLayout>;
+  return (
+    <SimpleLayout>
+      <Head>
+        <title>Hotel AGH</title>
+      </Head>
+      {page}
+    </SimpleLayout>
+  );
 };
 
 export default Home;

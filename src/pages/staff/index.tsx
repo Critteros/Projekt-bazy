@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import type { GetServerSideProps } from 'next';
 import { Box } from '@mui/material';
 
@@ -39,7 +40,14 @@ const StaffPage: NextPageWithLayout = () => {
 };
 
 StaffPage.getLayout = (page) => {
-  return <StaffLayout>{page}</StaffLayout>;
+  return (
+    <StaffLayout>
+      <Head>
+        <title>Staff Dashboard</title>
+      </Head>
+      {page}
+    </StaffLayout>
+  );
 };
 
 export default StaffPage;

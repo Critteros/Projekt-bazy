@@ -1,5 +1,6 @@
 import type { GetServerSideProps } from 'next';
 import { Stack, Typography } from '@mui/material';
+import Head from 'next/head';
 
 import { useSession } from '@/hooks/useSession';
 import type { NextPageWithLayout } from '../_app';
@@ -31,7 +32,14 @@ const AdminPage: NextPageWithLayout = () => {
 };
 
 AdminPage.getLayout = (page) => {
-  return <AdminLayout>{page}</AdminLayout>;
+  return (
+    <AdminLayout>
+      <Head>
+        <title>Admin Dashboard</title>
+      </Head>
+      {page}
+    </AdminLayout>
+  );
 };
 
 export default AdminPage;

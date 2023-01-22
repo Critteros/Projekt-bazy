@@ -31,7 +31,7 @@ export const LogoutButton = ({ typographyProps, ...props }: LogoutButtonProps) =
         </IconWrapper>
         <Typography {...typographyProps}>Logout</Typography>
       </AppButton>
-      <Notification error={error} onClose={() => setError(null)} />
+      <Notification message={error} onClose={() => setError(null)} />
     </>
   );
 };
