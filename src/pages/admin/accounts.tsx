@@ -35,8 +35,7 @@ const AdminAccounts: NextPageWithLayout = () => {
   const context = api.useContext();
   const { mutate } = api.auth.adminLogin.useMutation({
     onSuccess: async () => {
-      await context.invalidate();
-      await router.replace('/');
+      await Promise.all([context.invalidate(), router.replace('/')]);
     },
     onError: (error) => {
       setError(error.message);
