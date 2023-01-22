@@ -1,4 +1,6 @@
 import type { GetServerSideProps } from 'next';
+import { Stack, Typography } from '@mui/material';
+
 import { useSession } from '@/hooks/useSession';
 import type { NextPageWithLayout } from '../_app';
 import { AdminLayout } from '@/components/templates/AdminLayout';
@@ -13,7 +15,19 @@ const AdminPage: NextPageWithLayout = () => {
     return <></>;
   }
 
-  return <p>Admin</p>;
+  return (
+    <Stack
+      direction={'column'}
+      alignItems={'center'}
+      justifySelf={'center'}
+      alignSelf={'center'}
+      flexGrow={1}
+      gap={3}
+    >
+      <Typography variant={'h2'}>Admin Panel Dashboard</Typography>
+      <Typography variant={'h4'}>No interactive widgets are available at this moment</Typography>
+    </Stack>
+  );
 };
 
 AdminPage.getLayout = (page) => {

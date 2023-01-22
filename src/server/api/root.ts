@@ -1,5 +1,4 @@
 import { createTRPCRouter } from './trpc';
-import { exampleRouter } from './routers/example';
 import { authRouter } from './routers/auth';
 import { sessionRouter } from './routers/session';
 import { tablesRouter } from './routers/tables';
@@ -16,7 +15,6 @@ import { roomsRouter } from './routers/rooms';
  * All routers added in /api/routers should be manually added here
  */
 export const appRouter = createTRPCRouter({
-  example: exampleRouter,
   auth: authRouter,
   session: sessionRouter,
   tables: tablesRouter,
