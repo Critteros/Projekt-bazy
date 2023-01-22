@@ -10,7 +10,9 @@ import { TRPCError } from '@trpc/server';
 import {
   type ReservationAssignRoomRequest,
   type ReservationAvailableRoomsResponse,
+  type ReservationCurrentlyActiveResponse,
   ReservationAvailableRoomsResponseSchema,
+  ReservationCurrentlyActiveResponseSchema,
   ReservationsWithoutRoomResponseSchema,
 } from '@/dto/reservations';
 import type { ArrayElement } from '@/utils/types';
@@ -153,5 +155,31 @@ export class Reservation {
         message: `Could not find reservation for provided reservationId=${reservationId}`,
       });
     }
+  }
+
+  public async queryCurrentlyActiveReservations() {
+    const query = await this.dbPool.query<
+      Pick<
+        ArrayElement<ReservationInfoView>,
+        'date_in' | 'date_out' | 'room_number' | 'room_standards'
+      >
+    >({
+      name: 'reservation-query-currently-active',
+      text: `SELECT date_out, date_in, room_number, room_standards 
+            FROM reservation_info_view 
+            WHERE ongoing IS TRUE AND room_number IS NOT NULL`,
+    });
+
+    return await ReservationCurrentlyActiveResponseSchema.parseAsync(
+      query.rows.map(
+        ({ room_standards, room_number, date_in, date_out }) =>
+          ({
+            standards: room_standards,
+            dateOut: date_out,
+            dateIn: date_in,
+            roomNumber: room_number,
+          } satisfies ArrayElement<ReservationCurrentlyActiveResponse>),
+      ),
+    );
   }
 }

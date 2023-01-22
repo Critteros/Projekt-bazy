@@ -40,3 +40,15 @@ export const ReservationAssignRoomRequestSchema = z.object({
   roomNumber: ReservationSchema.shape.room_number,
 });
 export type ReservationAssignRoomRequest = z.infer<typeof ReservationAssignRoomRequestSchema>;
+
+export const ReservationCurrentlyActiveResponseSchema = z.array(
+  z.object({
+    dateIn: ReservationInfoViewSchema.shape.date_in,
+    dateOut: ReservationInfoViewSchema.shape.date_out,
+    roomNumber: z.number(),
+    standards: ReservationInfoViewSchema.shape.room_standards,
+  }),
+);
+export type ReservationCurrentlyActiveResponse = z.infer<
+  typeof ReservationCurrentlyActiveResponseSchema
+>;

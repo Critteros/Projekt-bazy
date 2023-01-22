@@ -20,14 +20,12 @@ export class Transaction {
     },
     client?: PoolClient,
   ) {
-    console.log('inseting transaction');
     const query = await (client ?? this.dbPool).query<Pick<TransactionType, 'transaction_id'>>({
       name: 'transaction-new-transaction',
       text: `INSERT INTO transaction (date, payment_id, customer_id, crew_id) VALUES 
                                     ($1, $2, (SELECT customer_id FROM account JOIN customer USING(account_id) WHERE login=$3), $4) RETURNING transaction_id`,
       values: [date, paymentId, customer, staffId],
     });
-    console.log('done inserting transaction');
     if (!query.rows[0]) {
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',

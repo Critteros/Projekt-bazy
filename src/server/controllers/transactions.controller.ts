@@ -8,6 +8,7 @@ import { Reservation } from '@/server/models/Reservation';
 export const createTransaction = roleProtectedProcedure(['staff'])
   .input(NewTransactionRequestSchema)
   .mutation(async ({ ctx, input }) => {
+    // Validate date ranges
     const client = await ctx.db.connect();
 
     const { staff_profile } = ctx.session!;
@@ -50,6 +51,12 @@ export const createTransaction = roleProtectedProcedure(['staff'])
       await Promise.all(
         reservations.map(({ dateIn, dateOut, standards, cost }) => {
           return (async () => {
+            if (dateIn.getTime() > dateOut.getTime()) {
+              throw new TRPCError({
+                code: 'BAD_REQUEST',
+                message: 'Invalid date range',
+              });
+            }
             const { reservationId } = await reservationModel.createNew(
               {
                 dateIn,

@@ -1,27 +1,25 @@
-import type { GetServerSideProps } from 'next';
-import { Stack, Skeleton, Typography, Chip } from '@mui/material';
+import { Chip, Skeleton, Stack } from '@mui/material';
 import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import type { GetServerSideProps } from 'next';
 
+import type { NextPageWithLayout } from '../_app';
 import { withRoleProtection } from '@/middlewares/withRoleProtection';
 import { StaffLayout } from '@/components/templates/StaffLayout';
-import type { NextPageWithLayout } from '../_app';
+import Head from 'next/head';
+import { AppLink } from '@/components/atoms/AppLink';
 import { CornerButton } from '@/components/atoms/CornerButton';
 import { IconWrapper } from '@/components/atoms/IconWrapper';
-import { AppLink } from '@/components/atoms/AppLink';
-import Head from 'next/head';
 import { api } from '@/utils/api';
-import type { GridColDef } from '@mui/x-data-grid';
 import type { ArrayElement } from '@/utils/types';
-import type { ReservationsWithoutRoomResponse } from '@/dto/reservations';
-import { DataGrid } from '@mui/x-data-grid';
-import { AssignRoomAction } from '@/components/organisms/AssignRoomAction';
+import type { ReservationCurrentlyActiveResponse } from '@/dto/reservations';
 
 export const getServerSideProps: GetServerSideProps = withRoleProtection('staff');
 
 const columns = [
   {
-    field: 'reservationId',
-    headerName: 'Reservation Id',
+    field: 'roomNumber',
+    headerName: 'Room Number',
     flex: 1,
     sortable: true,
     align: 'center',
@@ -31,7 +29,7 @@ const columns = [
   {
     field: 'dateIn',
     headerName: 'Date In',
-    flex: 2,
+    flex: 1,
     sortable: true,
     align: 'center',
     headerAlign: 'center',
@@ -40,26 +38,11 @@ const columns = [
   {
     field: 'dateOut',
     headerName: 'Date Out',
-    flex: 2,
+    flex: 1,
     sortable: true,
     align: 'center',
     headerAlign: 'center',
     type: 'date',
-  },
-  {
-    field: 'reservationCost',
-    headerName: 'Cost',
-    flex: 1,
-    sortable: true,
-    headerAlign: 'center',
-    align: 'center',
-    renderCell: ({ row }) => {
-      return (
-        <Stack direction={'row'} spacing={1}>
-          <Typography>{row.reservationCost}</Typography>
-        </Stack>
-      );
-    },
   },
   {
     field: 'standards',
@@ -78,19 +61,10 @@ const columns = [
       );
     },
   },
-  {
-    field: 'actions',
-    headerName: 'Actions',
-    flex: 1,
-    sortable: false,
-    headerAlign: 'center',
-    align: 'center',
-    renderCell: ({ row: { reservationId } }) => <AssignRoomAction reservationId={reservationId} />,
-  },
-] satisfies GridColDef<ArrayElement<ReservationsWithoutRoomResponse>>[];
+] satisfies GridColDef<ArrayElement<ReservationCurrentlyActiveResponse>>[];
 
-const AssignRoomsPage: NextPageWithLayout = () => {
-  const { data } = api.reservations.getReservationsWithoutRoom.useQuery();
+const ActiveReservationsPage: NextPageWithLayout = () => {
+  const { data } = api.reservations.currentlyActiveReservations.useQuery();
 
   if (!data)
     return (
@@ -105,7 +79,6 @@ const AssignRoomsPage: NextPageWithLayout = () => {
         <Skeleton variant={'rectangular'} width={'100%'} height={'100%'} />
       </Stack>
     );
-
   return (
     <Stack
       component={'main'}
@@ -119,7 +92,7 @@ const AssignRoomsPage: NextPageWithLayout = () => {
       <DataGrid
         columns={columns}
         rows={data}
-        getRowId={(row) => row.reservationId}
+        getRowId={(row) => row.roomNumber}
         disableSelectionOnClick
         sx={{
           flexGrow: 1,
@@ -132,11 +105,11 @@ const AssignRoomsPage: NextPageWithLayout = () => {
   );
 };
 
-AssignRoomsPage.getLayout = (page) => {
+ActiveReservationsPage.getLayout = (page) => {
   return (
     <StaffLayout>
       <Head>
-        <title>Assign Rooms</title>
+        <title>Active Reservations</title>
       </Head>
       <AppLink href={'/staff'}>
         <CornerButton>
@@ -150,4 +123,4 @@ AssignRoomsPage.getLayout = (page) => {
   );
 };
 
-export default AssignRoomsPage;
+export default ActiveReservationsPage;

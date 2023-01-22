@@ -24,3 +24,9 @@ export const assignRoomToReservation = roleProtectedProcedure(['staff', 'admin']
   .mutation(async ({ input, ctx }) => {
     await new Reservation(ctx.db).assignRoomToReservation(input);
   });
+
+export const currentlyActiveReservations = roleProtectedProcedure(['staff', 'admin']).query(
+  async ({ ctx }) => {
+    return await new Reservation(ctx.db).queryCurrentlyActiveReservations();
+  },
+);
