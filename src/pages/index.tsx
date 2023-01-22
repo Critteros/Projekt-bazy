@@ -1,4 +1,4 @@
-import { Container, IconButton, Stack, Typography } from '@mui/material';
+import { Container, Stack, Typography } from '@mui/material';
 import { Login as LoginIcon, VpnKey as RegisterIcon } from '@mui/icons-material';
 
 import { AdminPanelCard } from '@/components/atoms/AdminPanelCard';

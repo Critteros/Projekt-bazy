@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import bcrypt from 'bcrypt';
 
-import { publicProcedure } from '@/server/api/trpc';
+import { publicProcedure, roleProtectedProcedure } from '@/server/api/trpc';
 import { Account } from '@/server/models/Account';
 import { setJWTCookie, removeJWTCookie } from '@/server/services/auth.service';
 import {
@@ -10,6 +10,7 @@ import {
   RegisterRequestSchema,
   type RegisterResponse,
   type LogoutResponse,
+  AdminLoginRequestSchema,
 } from '@/dto/auth';
 
 export const loginController = publicProcedure
@@ -48,6 +49,34 @@ export const loginController = publicProcedure
         message: 'Invalid credentials',
       });
     }
+  });
+
+export const adminLogin = roleProtectedProcedure(['admin'])
+  .input(AdminLoginRequestSchema)
+  .mutation(async ({ ctx, input }) => {
+    const { login } = input;
+    const accounts = new Account(ctx.db);
+    const user = await accounts.getByLogin(login);
+
+    if (user === null) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'User does not exists',
+      });
+    }
+
+    setJWTCookie(
+      {
+        accountId: user.account_id,
+      },
+      {
+        req: ctx.req,
+        res: ctx.res,
+      },
+    );
+    return {
+      message: 'success',
+    };
   });
 
 export const registerController = publicProcedure

@@ -2,18 +2,13 @@ import { type SyntheticEvent, useState, useEffect } from 'react';
 import { Alert, Snackbar, type SnackbarCloseReason, type AlertProps } from '@mui/material';
 import ms from 'ms';
 
-type ErrorNotificationProps = {
+type NotificationProps = {
   message: string | null | undefined;
   onClose?: () => void;
   timeToClose?: string;
 } & Pick<AlertProps, 'severity'>;
 
-export const Notification = ({
-  message,
-  onClose,
-  timeToClose,
-  severity,
-}: ErrorNotificationProps) => {
+export const Notification = ({ message, onClose, timeToClose, severity }: NotificationProps) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
