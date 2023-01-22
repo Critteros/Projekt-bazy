@@ -141,12 +141,8 @@ export async function up(pgm: MigrationBuilder) {
     const transactionDate = faker.date.soon(120);
     const reservationData = dayjs(transactionDate).add(randomInt(0, 10), 'days').toDate();
     const outTime = dayjs(reservationData).add(randomInt(2, 21), 'days').toDate();
-    // First create a reservation
-    pgm.sql(sql`INSERT INTO reservation (reservation_id, date_in, date_out, reservation_cost, room_number)
-                VALUES (${i}, ${reservationData}, ${outTime}, ${payment.total_amount}, NULL)
-    `);
-    // Add a transaction
-    pgm.sql(sql`INSERT INTO transaction (date, payment_id, customer_id, crew_id, reservation_id)
+    // First create a transaction
+    pgm.sql(sql`INSERT INTO transaction (date, payment_id, customer_id, crew_id)
                 VALUES (${transactionDate}, ${payment.payment_id},
                         (SELECT customer_id
                          FROM customer
@@ -155,13 +151,16 @@ export async function up(pgm: MigrationBuilder) {
                         (SELECT staff_id
                          FROM staff
                                   JOIN account USING (account_id)
-                         WHERE login = ${staffName}),
-                        ${i});
+                         WHERE login = ${staffName}));
+    `);
+    // Add a reservation
+    pgm.sql(sql`INSERT INTO reservation ( date_in, date_out, reservation_cost, room_number, transaction_id)
+                VALUES (${reservationData}, ${outTime}, ${payment.total_amount}, NULL, ${i + 1})
     `);
 
     // For the reservation add which room type the user is interested in
     pgm.sql(sql`INSERT INTO reservation_room_type_relation (reservation_id, room_type_id)
-                VALUES (${i},
+                VALUES (${i + 1},
                         (SELECT room_type_id FROM room_type WHERE friendly_name = ${sample(
                           roomTypes,
                         )}))`);

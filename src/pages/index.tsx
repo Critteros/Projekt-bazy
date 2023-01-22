@@ -1,18 +1,65 @@
-import { Container } from '@mui/material';
+import { Container, Stack, Typography } from '@mui/material';
+import { Login as LoginIcon, VpnKey as RegisterIcon } from '@mui/icons-material';
 
 import { AdminPanelCard } from '@/components/atoms/AdminPanelCard';
-import { api } from '@/utils/api';
 
 import type { NextPageWithLayout } from './_app';
 import { CardContainer } from '@/components/atoms/CardContainer';
 import { MyReservationsCard } from '@/components/atoms/MyReservationsCard';
-import { CreateReservationCard } from '@/components/atoms/CreateReservationCard';
+import { StaffDashboardCard } from '@/components/atoms/StaffDashboardCard';
 import { ProfileCard } from '@/components/atoms/ProfileCard';
 import { SimpleLayout } from '@/components/templates/SimpleLayout';
+import { useSession } from '@/hooks/useSession';
+import { AppButton } from '@/components/atoms/AppButton';
+import { AppLink } from '@/components/atoms/AppLink';
 
 const Home: NextPageWithLayout = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const hello = api.example.hello.useQuery({ text: 'from tRPC' });
+  const { isAuthenticated } = useSession();
+
+  if (!isAuthenticated)
+    return (
+      <Stack direction={'column'} alignItems={'center'}>
+        <Typography variant={'h2'}>Welcome to hotel AGH</Typography>
+        <Typography variant={'h5'}>To proceed, please login or register</Typography>
+        <Stack
+          direction={'row'}
+          alignItems={'center'}
+          gap={5}
+          sx={{
+            mt: 5,
+          }}
+        >
+          <AppLink href={'/login'}>
+            <AppButton
+              variant={'outlined'}
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                padding: 1,
+                gap: 2,
+              }}
+            >
+              <LoginIcon />
+              <Typography>Login</Typography>
+            </AppButton>
+          </AppLink>
+          <AppLink href={'/register'}>
+            <AppButton
+              variant={'outlined'}
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                padding: 1,
+                gap: 2,
+              }}
+            >
+              <RegisterIcon />
+              <Typography>Register</Typography>
+            </AppButton>
+          </AppLink>
+        </Stack>
+      </Stack>
+    );
 
   return (
     <Container
@@ -28,7 +75,7 @@ const Home: NextPageWithLayout = () => {
         <ProfileCard />
         <AdminPanelCard />
         <MyReservationsCard />
-        <CreateReservationCard />
+        <StaffDashboardCard />
       </CardContainer>
     </Container>
   );

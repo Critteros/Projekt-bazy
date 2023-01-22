@@ -5,9 +5,9 @@ type CreateReservationCardProps = {
   onClick?: () => void;
 };
 
-export const CreateReservationCard = ({ onClick }: CreateReservationCardProps) => {
+export const StaffDashboardCard = ({ onClick }: CreateReservationCardProps) => {
   return (
-    <CardItem title={'Create Reservation'} onClick={onClick} role={'staff'}>
+    <CardItem title={'Staff Dashboard'} onClick={onClick} role={'staff'} href={'/staff'}>
       <BadgeIcon sx={{ fontSize: '1.5em' }} />
     </CardItem>
   );

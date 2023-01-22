@@ -31,7 +31,7 @@ export const NavBar = () => {
               <HotelIcon />
             </IconWrapper>
             <Typography variant={'h6'} component={'div'} sx={{ flexGrow: 1 }}>
-              Hotel Alabama
+              Hotel AGH
             </Typography>
           </AppLink>
           <Spacer />

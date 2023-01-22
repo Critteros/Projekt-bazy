@@ -21,5 +21,6 @@ export const useSession = () => {
     session: data?.login,
     roles: data?.roles,
     hasRole: canView,
+    isAuthenticated: !!data,
   };
 };

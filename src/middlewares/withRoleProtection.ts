@@ -12,7 +12,7 @@ export const withRoleProtection = (
     const hasRole = await checkSessionRole({
       req,
       res,
-      role: 'admin',
+      role,
     });
     if (!hasRole) {
       return {
