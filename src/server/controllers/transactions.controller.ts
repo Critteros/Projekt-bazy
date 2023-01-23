@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 import { roleProtectedProcedure } from '@/server/api/trpc';
 import { NewTransactionRequestSchema } from '@/dto/transaction';
 import { TRPCError } from '@trpc/server';
@@ -51,7 +53,7 @@ export const createTransaction = roleProtectedProcedure(['staff'])
       await Promise.all(
         reservations.map(({ dateIn, dateOut, standards, cost }) => {
           return (async () => {
-            if (dateIn.getTime() > dateOut.getTime()) {
+            if (dayjs(dateIn).isAfter(dayjs(dateOut))) {
               throw new TRPCError({
                 code: 'BAD_REQUEST',
                 message: 'Invalid date range',
