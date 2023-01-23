@@ -16,4 +16,8 @@ export const schemaMap = {
   transaction: s.TransactionSchema,
   table_info: s.TableInfoSchema,
   user_info_view: s.UserInfoViewSchema,
+  active_staff: s.StaffSchema,
+  hotel_rooms_view: s.HotelRoomViewSchema,
+  reservation_info_view: s.ReservationInfoViewSchema,
+  transaction_details_view: s.TransactionDetailsViewSchema,
 } as const;

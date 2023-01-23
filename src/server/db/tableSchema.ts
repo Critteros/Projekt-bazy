@@ -98,7 +98,6 @@ export const TransactionSchema = z.object({
   payment_id: z.number(),
   customer_id: z.number(),
   crew_id: z.number(),
-  reservation_id: z.number(),
 });
 export type Transaction = z.infer<typeof TransactionSchema>;
 
@@ -106,12 +105,16 @@ export const ReservationSchema = z.object({
   reservation_id: z.number({
     required_error: 'Reservation id must be a number',
   }),
-  date_in: z.date({
-    required_error: 'Date In must be a date',
-  }),
-  date_out: z.date({
-    required_error: 'Date out must be a date',
-  }),
+  date_in: z
+    .date({
+      required_error: 'Date In must be a date',
+    })
+    .or(z.string()),
+  date_out: z
+    .date({
+      required_error: 'Date out must be a date',
+    })
+    .or(z.string()),
   reservation_cost: z
     .number({
       required_error: 'Reservation cost must be a number',
@@ -206,6 +209,7 @@ export const TransactionDetailsViewSchema = TransactionSchema.pick({
     transaction_date: TransactionSchema.shape.date,
     customer: CustomerSchema,
     staff: StaffSchema,
+    reservations: z.array(ReservationInfoViewSchema),
   })
   .extend(
     PaymentsSchema.omit({

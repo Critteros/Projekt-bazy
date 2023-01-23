@@ -37,6 +37,19 @@ export class Tables {
             row_to_json(customer_profile) AS customer_profile,
             roles::text[] FROM user_info_view`;
         break;
+      case 'transaction_details_view':
+        stmt = `SELECT
+            transaction_id,
+            transaction_date,
+            row_to_json(customer) AS customer,
+            row_to_json(staff) AS staff,
+            payment_id,
+            method,
+            total_amount::int,
+            array_to_json(reservations) AS reservations
+        FROM transaction_details_view
+        `;
+        break;
       default:
         stmt = `SELECT * FROM ${tableName}`;
         break;
